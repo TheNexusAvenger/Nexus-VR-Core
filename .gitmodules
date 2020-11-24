@@ -1,3 +1,6 @@
 [submodule "module/Nexus-Wrapped-Instance"]
 	path = module/Nexus-Wrapped-Instance
 	url = https://github.com/TheNexusAvenger/Nexus-Wrapped-Instance.git
+[submodule "module/Nexus-Project"]
+	path = module/Nexus-Project
+	url = https://github.com/TheNexusAvenger/Nexus-Project.git
