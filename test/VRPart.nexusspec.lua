@@ -1,6 +1,7 @@
 --[[
 TheNexusAvenger
-Tests for NexusWrappedInstance.
+
+Tests for VRPart.
 --]]
 
 local NexusUnitTesting = require("NexusUnitTesting")
@@ -15,7 +16,7 @@ local VRPartTest = NexusUnitTesting.UnitTest:Extend()
 Sets up the test.
 --]]
 function VRPartTest:Setup()
-    self.CuT = VRPart.new("Part")
+    self.CuT = VRPart.new()
     self.CuT.Size = Vector3.new(2,4,6)
 end
 
