@@ -106,6 +106,11 @@ function VRSurfaceGui:UpdateEvents(Points)
                 end
                 ScrollLastPositions[Frame] = InputPosition
             end
+
+            --Capture the textbox.
+            if Frame:IsA("TextBox") and not Frame:IsFocused() then
+                Frame:CaptureFocus()
+            end
         elseif InputPosition.Z <= TRIGGER_UP_THRESHOLD and MouseDownFrames[Frame] then
             ScrollLastPositions[Frame] = nil
             MouseDownFrames[Frame] = nil
