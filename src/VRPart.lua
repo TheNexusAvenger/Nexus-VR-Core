@@ -4,7 +4,8 @@ TheNexusAvenger
 Wraps a part for use with VR math.
 --]]
 
-local NexusWrappedInstance = require(script.Parent:WaitForChild("NexusWrappedInstance"))
+local NexusVRCore = require(script.Parent)
+local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 
 local VRPart = NexusWrappedInstance:Extend()
 VRPart:SetClassName("VRPart")

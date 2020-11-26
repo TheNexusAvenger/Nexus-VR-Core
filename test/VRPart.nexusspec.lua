@@ -4,7 +4,9 @@ Tests for NexusWrappedInstance.
 --]]
 
 local NexusUnitTesting = require("NexusUnitTesting")
-local VRPart = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"):WaitForChild("VRPart"))
+
+local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
+local VRPart = NexusVRCore:GetResource("VRPart")
 local VRPartTest = NexusUnitTesting.UnitTest:Extend()
 
 
