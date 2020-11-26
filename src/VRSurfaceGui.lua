@@ -43,6 +43,8 @@ function VRSurfaceGui:__new(ExistingSurfaceGui)
     self.MouseEnterFrames = {}
     self:DisableChangeReplication("MouseDownFrames")
     self.MouseDownFrames = {}
+    self:DisableChangeReplication("ScrollLastPositions")
+    self.ScrollLastPositions = {}
 end
 
 --[[
@@ -68,7 +70,7 @@ function VRSurfaceGui:UpdateEvents(Points)
     end
 
     --Update the events for mouse movement and clicks.
-    local MouseEnterFrames,MouseDownFrames = self.MouseEnterFrames,self.MouseDownFrames
+    local MouseEnterFrames,MouseDownFrames,ScrollLastPositions = self.MouseEnterFrames,self.MouseDownFrames,self.ScrollLastPositions
     for Frame,InputPosition in pairs(MaxTriggerInputs) do
         --Send the movement inputs.
         if not MouseEnterFrames[Frame] then
@@ -83,17 +85,29 @@ function VRSurfaceGui:UpdateEvents(Points)
         Frame.MouseMoved:Fire(InputPosition.X,InputPosition.Y)
         
         --Send the mouse button inputs.
-        if InputPosition.Z >= TRIGGER_DOWN_THRESHOLD and not MouseDownFrames[Frame] then
-            MouseDownFrames[Frame] = true
-            if Frame:IsA("GuiButton") then
-                Frame.MouseButton1Down:Fire(InputPosition.X,InputPosition.Y)
+        if InputPosition.Z >= TRIGGER_DOWN_THRESHOLD then
+            if not MouseDownFrames[Frame] then
+                MouseDownFrames[Frame] = true
+                if Frame:IsA("GuiButton") then
+                    Frame.MouseButton1Down:Fire(InputPosition.X,InputPosition.Y)
+                end
+                Frame.InputBegan:Fire({
+                    KeyCode = Enum.KeyCode.Unknown,
+                    UserInputType = Enum.UserInputType.MouseButton1,
+                    Position = InputPosition,
+                })
             end
-            Frame.InputBegan:Fire({
-                KeyCode = Enum.KeyCode.Unknown,
-                UserInputType = Enum.UserInputType.MouseButton1,
-                Position = InputPosition,
-            })
+
+            --Move the ScrollingFrame.
+            if Frame:IsA("ScrollingFrame") then
+                if ScrollLastPositions[Frame] then
+                    local DeltaInput = InputPosition - ScrollLastPositions[Frame]
+                    Frame.CanvasPosition = Vector2.new(Frame.CanvasPosition.X + DeltaInput.X,Frame.CanvasPosition.Y + DeltaInput.Y)
+                end
+                ScrollLastPositions[Frame] = InputPosition
+            end
         elseif InputPosition.Z <= TRIGGER_UP_THRESHOLD and MouseDownFrames[Frame] then
+            ScrollLastPositions[Frame] = nil
             MouseDownFrames[Frame] = nil
             if Frame:IsA("GuiButton") then
                 Frame.MouseButton1Up:Fire(InputPosition.X,InputPosition.Y)
@@ -124,6 +138,7 @@ function VRSurfaceGui:UpdateEvents(Points)
         --Remove the frame.
         MouseEnterFrames[Frame] = nil
         MouseDownFrames[Frame] = nil
+        ScrollLastPositions[Frame] = nil
     end
 end
 

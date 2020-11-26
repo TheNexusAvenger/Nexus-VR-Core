@@ -202,6 +202,60 @@ NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("UpdateEvents"):SetRun(fu
     self:AssertEquals(MouseButton1ClickEvents,{{},{}},"Button MouseButton1Click events incorrect.")
 end))
 
+--[[
+Tests the UpdateEvents method with a ScrollingFrame.
+--]]
+NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("UpdateEventsScrollingFrame"):SetRun(function(self)
+    --Add a scrolling frame.
+    local ScrollingFrame = NexusWrappedInstance.new("ScrollingFrame")
+    ScrollingFrame.Size = UDim2.new(0,400,0,300)
+    ScrollingFrame.Position = UDim2.new(0,100,0,100)
+    ScrollingFrame.CanvasSize = UDim2.new(0,600,0,400)
+    ScrollingFrame.Parent = self.CuT
+
+    --Assert moving but not "clicking" doesn't change the canvas position.
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.3)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.3,0.4,0.3)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+
+    --Assert moving vertically is correct.
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (50/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,-50),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (100/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,-100),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (50/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,-50),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+
+    --Assert moving horizontally is correct.
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4 - (50/800),0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(-50,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4 - (100/800),0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(-100,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4 - (50/800),0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(-50,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+
+    --Assert moving horizontally and vertically is correct.
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4 - (50/800),0.5 - (50/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(-50,-50),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4 - (100/800),0.5 - (100/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(-100,-100),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4 - (50/800),0.5 - (50/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(-50,-50),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
+end))
+
 
 
 return true
