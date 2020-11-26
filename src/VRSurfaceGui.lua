@@ -102,7 +102,7 @@ function VRSurfaceGui:UpdateEvents(Points)
             if Frame:IsA("ScrollingFrame") then
                 if ScrollLastPositions[Frame] then
                     local DeltaInput = InputPosition - ScrollLastPositions[Frame]
-                    Frame.CanvasPosition = Vector2.new(Frame.CanvasPosition.X + DeltaInput.X,Frame.CanvasPosition.Y + DeltaInput.Y)
+                    Frame.CanvasPosition = Vector2.new(Frame.CanvasPosition.X - DeltaInput.X,Frame.CanvasPosition.Y - DeltaInput.Y)
                 end
                 ScrollLastPositions[Frame] = InputPosition
             end
