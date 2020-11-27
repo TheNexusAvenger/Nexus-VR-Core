@@ -48,6 +48,29 @@ function VRSurfaceGui:__new(ExistingSurfaceGui)
 end
 
 --[[
+Creates an __index metamethod for an object. Used to
+setup custom indexing.
+--]]
+function VRSurfaceGui:__createindexmethod(Object,Class,RootClass)
+    --Get the base method.
+    local BaseIndexMethod = self.super:__createindexmethod(Object,Class,RootClass)
+
+    --Return a wrapped method.
+    return function(MethodObject,Index)
+        --Return the special case for the Adornee or Parent.
+        if Index == "Adornee" or Index == "Parent" then
+            local Part = Object.WrappedInstance[Index]
+            if Part and typeof(Part) == "Instance" and Part:IsA("BasePart") then
+                return VRPart.GetInstance(Part)
+            end
+        end
+
+        --Return the base return.
+        return BaseIndexMethod(MethodObject,Index)
+    end
+end
+
+--[[
 Updates the events of frames with the
 given relative points.
 --]]
