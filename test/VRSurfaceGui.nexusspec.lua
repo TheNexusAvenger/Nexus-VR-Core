@@ -226,9 +226,11 @@ NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("UpdateEventsScrollingFra
     self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,50),"Canvas position is incorrect.")
     self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (100/600),0.9)})
     self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,100),"Canvas position is incorrect.")
-    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (50/600),0.9)})
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (150/600),0.9)})
+    self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,100),"Canvas position is incorrect.")
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (100/600),0.9)})
     self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,50),"Canvas position is incorrect.")
-    self.CuT:UpdateEvents({Vector3.new(0.4,0.5,0.9)})
+    self.CuT:UpdateEvents({Vector3.new(0.4,0.5 - (50/600),0.9)})
     self:AssertEquals(ScrollingFrame.CanvasPosition,Vector2.new(0,0),"Canvas position is incorrect.")
 
     --Assert moving horizontally is correct.
