@@ -15,6 +15,8 @@ local VRPart = NexusVRCore:GetResource("VRPart")
 
 local VRSurfaceGui = NexusWrappedInstance:Extend()
 VRSurfaceGui:SetClassName("VRSurfaceGui")
+VRSurfaceGui.VRSurfaceGuis = {}
+setmetatable(VRSurfaceGui.CachedInstances,{__mode="k"})
 
 
 
@@ -37,6 +39,9 @@ Creates the VR Surface Gui.
 --]]
 function VRSurfaceGui:__new(ExistingSurfaceGui)
     self:InitializeSuper(ExistingSurfaceGui or Instance.new("SurfaceGui"))
+
+    --Store the SurfaceGui.
+    VRSurfaceGui.VRSurfaceGuis[self.object] = true
 
     --Set up the event state storage.
     self:DisableChangeReplication("MouseEnterFrames")
