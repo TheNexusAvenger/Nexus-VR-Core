@@ -10,6 +10,8 @@ local TRIGGER_UP_THRESHOLD = 0.6
 
 
 local NexusVRCore = require(script.Parent)
+local NexusObject = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.NexusObject")
+local NexusPropertyValidator = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.PropertyValidator.NexusPropertyValidator")
 local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 local VRPart = NexusVRCore:GetResource("VRPart")
 
@@ -19,6 +21,27 @@ VRSurfaceGui:CreateGetInstance()
 VRSurfaceGui.VRSurfaceGuis = {}
 setmetatable(VRSurfaceGui.CachedInstances,{__mode="k"})
 
+local VRPartValidator = NexusObject:Extend()
+VRPartValidator:SetClassName("VRPartValidator")
+VRPartValidator:Implements(NexusPropertyValidator)
+
+
+
+--[[
+Validates a change to the property of a NexusObject.
+The new value must be returned. If the input is invalid,
+an error should be thrown.
+--]]
+function VRPartValidator:ValidateChange(_,_,Value)
+    --Wrap the value if it is a part.
+    if typeof(Value) == "Instance" then
+        return VRPart.GetInstance(Value)
+    end
+
+    --Return the base value.
+    return Value
+end
+
 
 
 --[[
@@ -26,6 +49,11 @@ Creates the VR Surface Gui.
 --]]
 function VRSurfaceGui:__new(ExistingSurfaceGui)
     self:InitializeSuper(ExistingSurfaceGui or Instance.new("SurfaceGui"))
+
+    --Add the validators for wrapping VRParts.
+    local Validator = VRPartValidator.new()
+    self:AddPropertyValidator("Adornee",Validator)
+    self:AddPropertyValidator("Parent",Validator)
 
     --Store the SurfaceGui.
     VRSurfaceGui.VRSurfaceGuis[self.object] = true

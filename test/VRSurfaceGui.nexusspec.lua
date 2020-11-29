@@ -348,5 +348,16 @@ NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("UpdateEventsEnterWhilePr
     self:AssertEquals(FrameInputEndedEvents,{Enum.UserInputType.MouseButton1},"Frame InputEnded events incorrect.")
 end))
 
+--[[
+Tests setting the Adornee and Parent values.
+--]]
+NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("Adornee"):SetRun(function(self)
+    self.CuT.Adornee = Instance.new("Part")
+    self.CuT.Parent = Instance.new("Part")
+    self:AssertTrue(self.CuT.Adornee:IsA("VRPart"),"Part wasn't converted to a VRPart.")
+    self:AssertTrue(self.CuT.Parent:IsA("VRPart"),"Part wasn't converted to a VRPart.")
+end))
+
+
 
 return true
