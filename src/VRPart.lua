@@ -9,22 +9,9 @@ local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 
 local VRPart = NexusWrappedInstance:Extend()
 VRPart:SetClassName("VRPart")
+VRPart:CreateGetInstance()
 
 
-
---[[
-Gets a VR Part.
---]]
-function VRPart.GetInstance(ExistingPart)
-	--Create the string instance or create the cached instance if needed.
-	local CachedInstance = NexusWrappedInstance.CachedInstances[ExistingPart]
-	if not CachedInstance then
-		CachedInstance = VRPart.new(ExistingPart)
-	end
-	
-	--Return the cached entry.
-	return CachedInstance
-end
 
 --[[
 Creates the VR part.

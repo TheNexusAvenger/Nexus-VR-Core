@@ -15,24 +15,11 @@ local VRPart = NexusVRCore:GetResource("VRPart")
 
 local VRSurfaceGui = NexusWrappedInstance:Extend()
 VRSurfaceGui:SetClassName("VRSurfaceGui")
+VRSurfaceGui:CreateGetInstance()
 VRSurfaceGui.VRSurfaceGuis = {}
 setmetatable(VRSurfaceGui.CachedInstances,{__mode="k"})
 
 
-
---[[
-Gets a VR Surface Gui.
---]]
-function VRSurfaceGui.GetInstance(ExistingSurfaceGui)
-	--Create the string instance or create the cached instance if needed.
-	local CachedInstance = NexusWrappedInstance.CachedInstances[ExistingSurfaceGui]
-	if not CachedInstance then
-		CachedInstance = VRSurfaceGui.new(ExistingSurfaceGui)
-	end
-	
-	--Return the cached entry.
-	return CachedInstance
-end
 
 --[[
 Creates the VR Surface Gui.
