@@ -73,7 +73,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
             for InputId,ControllerCFrame in pairs(CFrames) do
                 --Set the frame if the ray cast is closer and is valid.
                 local RaycastPointX,RaycastPointY,RaycastPointDepth = Part:Raycast(ControllerCFrame,Face)
-                if RaycastPointX >= 0 and RaycastPointX <= 1 and RaycastPointY >= 0 and RaycastPointY <= 1 and RaycastPointDepth >= 0 and CanRaycast(ControllerCFrame,RaycastPointDepth + 0.05,Part:GetWrappedInstance()) then
+                if RaycastPointX >= 0 and RaycastPointX <= 1 and RaycastPointY >= 0 and RaycastPointY <= 1 and RaycastPointDepth >= 0 and (SurfaceGui.AlwaysOnTop or CanRaycast(ControllerCFrame,RaycastPointDepth + 0.05,Part:GetWrappedInstance())) then
                     if not RaycastedFrames[InputId] or RaycastedFrames[InputId].Depth > RaycastPointDepth then
                         RaycastedFrames[InputId] = {
                             Gui = SurfaceGui,
