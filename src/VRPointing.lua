@@ -9,14 +9,24 @@ local PROJECTION_DEPTH = 0.1
 
 
 local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local VRService = game:GetService("VRService")
 
 local NexusVRCore = require(script.Parent)
+local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 local NexusInstance = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.NexusInstance")
 local VRPointer = NexusVRCore:GetResource("VRPointer")
 local VRSurfaceGui = NexusVRCore:GetResource("VRSurfaceGui")
 
 local VRPointing = NexusInstance:Extend()
+VRPointing.VRService = NexusWrappedInstance.GetInstance(VRService)
 VRPointing.VRPointers = {}
+VRPointing.Inputs = {
+    [Enum.KeyCode.ButtonL2] = 0,
+    [Enum.KeyCode.ButtonR2] = 0,
+    [Enum.UserInputType.MouseButton1] = false,
+}
 VRPointing:SetClassName("VRPointing")
 
 
@@ -118,6 +128,70 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
             Pointer.Visible = false
         end
     end
+end
+
+--[[
+Returns the CFrames and inputs for the VR service.
+--]]
+function VRPointing:GetVRInputs()
+    --Return based on the controllers.
+    local LeftEnabled,RightEnabled = VRPointing.VRService:GetUserCFrameEnabled(Enum.UserCFrame.LeftHand),VRPointing.VRService:GetUserCFrameEnabled(Enum.UserCFrame.RightHand)
+    if LeftEnabled and RightEnabled then
+        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.LeftHand),VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.RightHand)},{VRPointing.Inputs[Enum.KeyCode.ButtonL2],VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
+    elseif LeftEnabled then
+        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.LeftHand)},{VRPointing.Inputs[Enum.KeyCode.ButtonL2]}
+    elseif RightEnabled then
+        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.RightHand)},{VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
+    end
+
+    --Return based on the head if no controllers are enabled.
+    if VRPointing.Inputs[Enum.UserInputType.MouseButton1] then
+        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.Head)},{1}
+    else
+        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.Head)},{VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
+    end
+end
+
+--[[
+Connects the inputs for VR inputs.
+--]]
+function VRPointing:ConnectEvents()
+    UserInputService.InputBegan:Connect(function(Input)
+        if typeof(Input.UserInputType) == "boolean" then
+            VRPointing.Inputs[Input.UserInputType] = true
+        elseif typeof(Input.KeyCode) == "boolean" then
+            VRPointing.Inputs[Input.KeyCode] = true
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(Input)
+        if typeof(Input.UserInputType) == "boolean" then
+            VRPointing.Inputs[Input.UserInputType] = false
+        elseif typeof(Input.KeyCode) == "boolean" then
+            VRPointing.Inputs[Input.KeyCode] = false
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(Input)
+        if typeof(Input.UserInputType) == "number" then
+            VRPointing.Inputs[Input.UserInputType] = Input.Position.Z
+        elseif typeof(Input.KeyCode) == "number" then
+            VRPointing.Inputs[Input.KeyCode] = Input.Position.Z
+        end
+    end)
+end
+
+--[[
+Runs updating pointing.
+--]]
+function VRPointing:RunUpdating()
+    --Return if VR is not enabled.
+    if not UserInputService.VREnabled then
+        return
+    end
+    
+    --Connect updating the inpputs.
+    RunService:BindToRenderStep("NexusVRCorePointingUpdate",Enum.RenderPriority.Camera.Value - 1,function()
+        VRPointing:UpdatePointers(VRPointing:GetVRInputs())
+    end)
 end
 
 

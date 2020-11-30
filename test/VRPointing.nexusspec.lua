@@ -103,6 +103,42 @@ NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointers"):SetRun(fu
     self:AssertClose(SurfaceGui3.LastInputs[1],Vector3.new(0.5,0.4,1),0.01)
 end))
 
+--[[
+Tests the GetVRInputs method.
+--]]
+NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("GetVRInputs"):SetRun(function(self)
+    --Mock GetUserCFrameEnabled and GetUserCFrame.
+    local LeftEnabled,RightEnabled,HeadEnabled = true,true,true
+    VRPointing.VRService:DisableChangeReplication("GetUserCFrameEnabled")
+    function VRPointing.VRService:GetUserCFrameEnabled(EnumCFrame)
+        if EnumCFrame == Enum.UserCFrame.LeftHand then
+            return LeftEnabled
+        elseif EnumCFrame == Enum.UserCFrame.RightHand then
+            return RightEnabled
+        elseif EnumCFrame == Enum.UserCFrame.Head then
+            return HeadEnabled
+        end
+    end
+    function VRPointing.VRService:GetUserCFrame()
+        return CFrame.new()
+    end
+
+    --Assert that the hand CFrames are returned correctly.
+    VRPointing.Inputs[Enum.KeyCode.ButtonL2] = 0.4
+    VRPointing.Inputs[Enum.KeyCode.ButtonR2] = 0.6
+    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new(),CFrame.new()},{0.4,0.6}})
+    LeftEnabled,RightEnabled = true,false
+    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{0.4}})
+    LeftEnabled,RightEnabled = false,true
+    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{0.6}})
+
+    --Assert that the head CFrames are returned correctly.
+    LeftEnabled,RightEnabled = false,false
+    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{0.6}})
+    VRPointing.Inputs[Enum.UserInputType.MouseButton1] = true
+    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{1}})
+end))
+
 
 
 return true
