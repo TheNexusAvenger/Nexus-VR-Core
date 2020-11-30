@@ -122,7 +122,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
         local Pointer = VRPointing.VRPointers[i]
         local Frame = RaycastedFrames[i]
         if Frame then
-            Pointer:SetFromCFrame(CFrames[1],Frame.Depth)
+            Pointer:SetFromCFrame(CFrames[i],Frame.Depth)
             Pointer.Visible = true
         else
             Pointer.Visible = false
