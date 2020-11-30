@@ -8,7 +8,7 @@ local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
 local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
-local VRSurfaceGui = NexusVRCore:GetResource("VRSurfaceGui")
+local VRSurfaceGui = NexusVRCore:GetResource("Container.VRSurfaceGui")
 local VRSurfaceGuiTest = NexusUnitTesting.UnitTest:Extend()
 
 

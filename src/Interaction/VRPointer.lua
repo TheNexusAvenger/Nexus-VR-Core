@@ -10,7 +10,7 @@ local BEAM_GRADIENT_DISTANCE = 2
 
 local Workspace = game:GetService("Workspace")
 
-local NexusVRCore = require(script.Parent)
+local NexusVRCore = require(script.Parent.Parent)
 local NexusInstance = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.NexusInstance")
 
 local VRPointer = NexusInstance:Extend()

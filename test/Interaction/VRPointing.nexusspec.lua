@@ -7,8 +7,8 @@ Tests for VRPointing.
 local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
-local VRSurfaceGui = NexusVRCore:GetResource("VRSurfaceGui")
-local VRPointing = NexusVRCore:GetResource("VRPointing")
+local VRSurfaceGui = NexusVRCore:GetResource("Container.VRSurfaceGui")
+local VRPointing = NexusVRCore:GetResource("Interaction.VRPointing")
 local VRPointingTest = NexusUnitTesting.UnitTest:Extend()
 
 

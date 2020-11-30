@@ -7,7 +7,7 @@ Tests for VRPart.
 local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
-local VRPart = NexusVRCore:GetResource("VRPart")
+local VRPart = NexusVRCore:GetResource("Interaction.VRPart")
 local VRPartTest = NexusUnitTesting.UnitTest:Extend()
 
 
