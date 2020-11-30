@@ -6,6 +6,10 @@ Manages pointing from VR inputs.
 
 local PROJECTION_DEPTH = 0.1
 
+
+
+local Workspace = game:GetService("Workspace")
+
 local NexusVRCore = require(script.Parent)
 local NexusInstance = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.NexusInstance")
 local VRPointer = NexusVRCore:GetResource("VRPointer")
@@ -14,6 +18,34 @@ local VRSurfaceGui = NexusVRCore:GetResource("VRSurfaceGui")
 local VRPointing = NexusInstance:Extend()
 VRPointing.VRPointers = {}
 VRPointing:SetClassName("VRPointing")
+
+
+
+--[[
+Returns if the part is raycasted to with no
+0-transparency parts.
+--]]
+local function CanRaycast(StartCF,Distance,TargetPart)
+    --Return false if the distance is 0 or negative.
+    if Distance <= 0 then
+        return false
+    end
+
+    --Ray cast and return if the target part was hit.
+    local RaycastResult = Workspace:Raycast(StartCF.Position,StartCF.LookVector * Distance)
+    if not RaycastResult or not RaycastResult.Instance or RaycastResult.Instance == TargetPart then
+        return true
+    end
+
+    --Return false if an opague part was hit.
+    if RaycastResult.Instance.Transparency == 0 then
+        return false
+    end
+
+    --Perform another ray cast.
+    local CompleteDistance = (StartCF.Position - RaycastResult.Position).Magnitude
+    return CanRaycast(StartCF * CFrame.new(0,0,-(CompleteDistance + 0.01)),Distance - (CompleteDistance + 0.01),TargetPart)
+end
 
 
 
@@ -31,7 +63,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
             for InputId,ControllerCFrame in pairs(CFrames) do
                 --Set the frame if the ray cast is closer and is valid.
                 local RaycastPointX,RaycastPointY,RaycastPointDepth = Part:Raycast(ControllerCFrame,Face)
-                if RaycastPointX >= 0 and RaycastPointX <= 1 and RaycastPointY >= 0 and RaycastPointY <= 1 and RaycastPointDepth >= 0 then
+                if RaycastPointX >= 0 and RaycastPointX <= 1 and RaycastPointY >= 0 and RaycastPointY <= 1 and RaycastPointDepth >= 0 and CanRaycast(ControllerCFrame,RaycastPointDepth + 0.05,Part:GetWrappedInstance()) then
                     if not RaycastedFrames[InputId] or RaycastedFrames[InputId].Depth > RaycastPointDepth then
                         RaycastedFrames[InputId] = {
                             Gui = SurfaceGui,
