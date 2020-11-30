@@ -157,23 +157,23 @@ Connects the inputs for VR inputs.
 --]]
 function VRPointing:ConnectEvents()
     UserInputService.InputBegan:Connect(function(Input)
-        if typeof(Input.UserInputType) == "boolean" then
+        if typeof(VRPointing.Inputs[Input.UserInputType]) == "boolean" then
             VRPointing.Inputs[Input.UserInputType] = true
-        elseif typeof(Input.KeyCode) == "boolean" then
+        elseif typeof(VRPointing.Inputs[Input.KeyCode]) == "boolean" then
             VRPointing.Inputs[Input.KeyCode] = true
         end
     end)
     UserInputService.InputEnded:Connect(function(Input)
-        if typeof(Input.UserInputType) == "boolean" then
+        if typeof(VRPointing.Inputs[Input.UserInputType]) == "boolean" then
             VRPointing.Inputs[Input.UserInputType] = false
-        elseif typeof(Input.KeyCode) == "boolean" then
+        elseif typeof(VRPointing.Inputs[Input.KeyCode]) == "boolean" then
             VRPointing.Inputs[Input.KeyCode] = false
         end
     end)
     UserInputService.InputChanged:Connect(function(Input)
-        if typeof(Input.UserInputType) == "number" then
+        if typeof(VRPointing.Inputs[Input.UserInputType]) == "number" then
             VRPointing.Inputs[Input.UserInputType] = Input.Position.Z
-        elseif typeof(Input.KeyCode) == "number" then
+        elseif typeof(VRPointing.Inputs[Input.KeyCode]) == "number" then
             VRPointing.Inputs[Input.KeyCode] = Input.Position.Z
         end
     end)
