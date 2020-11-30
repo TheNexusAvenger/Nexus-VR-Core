@@ -6,6 +6,8 @@ Tests for VRPointing.
 
 local NexusUnitTesting = require("NexusUnitTesting")
 
+local Workspace = game:GetService("Workspace")
+
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
 local VRSurfaceGui = NexusVRCore:GetResource("Container.VRSurfaceGui")
 local VRPointing = NexusVRCore:GetResource("Interaction.VRPointing")
@@ -124,19 +126,20 @@ NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("GetVRInputs"):SetRun(funct
     end
 
     --Assert that the hand CFrames are returned correctly.
+    local HeadCFrame = Workspace.CurrentCamera:GetRenderCFrame()
     VRPointing.Inputs[Enum.KeyCode.ButtonL2] = 0.4
     VRPointing.Inputs[Enum.KeyCode.ButtonR2] = 0.6
-    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new(),CFrame.new()},{0.4,0.6}})
+    self:AssertEquals({VRPointing:GetVRInputs()},{{HeadCFrame * CFrame.new(),HeadCFrame * CFrame.new()},{0.4,0.6}})
     LeftEnabled,RightEnabled = true,false
-    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{0.4}})
+    self:AssertEquals({VRPointing:GetVRInputs()},{{HeadCFrame * CFrame.new()},{0.4}})
     LeftEnabled,RightEnabled = false,true
-    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{0.6}})
+    self:AssertEquals({VRPointing:GetVRInputs()},{{HeadCFrame * CFrame.new()},{0.6}})
 
     --Assert that the head CFrames are returned correctly.
     LeftEnabled,RightEnabled = false,false
-    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{0.6}})
+    self:AssertEquals({VRPointing:GetVRInputs()},{{HeadCFrame},{0.6}})
     VRPointing.Inputs[Enum.UserInputType.MouseButton1] = true
-    self:AssertEquals({VRPointing:GetVRInputs()},{{CFrame.new()},{1}})
+    self:AssertEquals({VRPointing:GetVRInputs()},{{HeadCFrame},{1}})
 end))
 
 

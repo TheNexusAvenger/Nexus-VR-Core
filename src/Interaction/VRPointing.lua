@@ -136,19 +136,22 @@ Returns the CFrames and inputs for the VR service.
 function VRPointing:GetVRInputs()
     --Return based on the controllers.
     local LeftEnabled,RightEnabled = VRPointing.VRService:GetUserCFrameEnabled(Enum.UserCFrame.LeftHand),VRPointing.VRService:GetUserCFrameEnabled(Enum.UserCFrame.RightHand)
+    local HeadCFrame = Workspace.CurrentCamera:GetRenderCFrame()
+    local CenterCFrame = HeadCFrame * VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.Head):inverse()
+    local LeftHandCFrame,RightHandCFrame = CenterCFrame * VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.LeftHand),CenterCFrame * VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.RightHand)
     if LeftEnabled and RightEnabled then
-        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.LeftHand),VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.RightHand)},{VRPointing.Inputs[Enum.KeyCode.ButtonL2],VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
+        return {LeftHandCFrame,RightHandCFrame},{VRPointing.Inputs[Enum.KeyCode.ButtonL2],VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
     elseif LeftEnabled then
-        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.LeftHand)},{VRPointing.Inputs[Enum.KeyCode.ButtonL2]}
+        return {LeftHandCFrame},{VRPointing.Inputs[Enum.KeyCode.ButtonL2]}
     elseif RightEnabled then
-        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.RightHand)},{VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
+        return {RightHandCFrame},{VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
     end
 
     --Return based on the head if no controllers are enabled.
     if VRPointing.Inputs[Enum.UserInputType.MouseButton1] then
-        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.Head)},{1}
+        return {HeadCFrame},{1}
     else
-        return {VRPointing.VRService:GetUserCFrame(Enum.UserCFrame.Head)},{VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
+        return {HeadCFrame},{VRPointing.Inputs[Enum.KeyCode.ButtonR2]}
     end
 end
 
