@@ -67,6 +67,21 @@ function VRSurfaceGui:__new(ExistingSurfaceGui)
     self.ScrollLastPositions = {}
     self:DisableChangeReplication("LastInputs")
     self.LastInputs = {}
+
+    --Make the frames unselectable. This prevents a freezing problem 
+    --if the SurfaceGui is not in PlayerGui. This code should only happen
+    --in VR and uses custom inputs, so this shouldn't affect anything.
+    --https://devforum.roblox.com/t/vr-immediately-crashes-when-you-try-to-interact-with-any-surface-gui/498889
+    for _,Frame in pairs(self:GetDescendants()) do
+        if Frame:IsA("Frame") then
+            Frame.Selectable = false
+        end
+    end
+    self.DescendantAdded:Connect(function(Frame)
+        if Frame:IsA("Frame") then
+            Frame.Selectable = false
+        end
+    end)
 end
 
 --[[
@@ -108,12 +123,6 @@ function VRSurfaceGui:UpdateEvents(Points)
                 local FrameSize,FramePosition = Frame.AbsoluteSize,Frame.AbsolutePosition
                 if FramePosition.X <= PosX and FramePosition.X + FrameSize.X >= PosX and FramePosition.Y <= PosY and FramePosition.Y + FrameSize.Y >= PosY then
                     if not MaxTriggerInputs[Frame] or TriggerInput > MaxTriggerInputs[Frame].Z then
-                        --Make the frame unselectable. This prevents a freezing problem 
-                        --if the SurfaceGui is not in PlayerGui. This code should only happen
-                        --in VR and uses custom inputs, so this shouldn't affect anything.
-                        --https://devforum.roblox.com/t/vr-immediately-crashes-when-you-try-to-interact-with-any-surface-gui/498889
-                        Frame.Selectable = false
-                        
                         --Store the frame.
                         MaxTriggerInputs[Frame] = Vector3.new(PosX,PosY,TriggerInput)
                         FrameInputId[Frame] = InputId
