@@ -27,6 +27,9 @@ function VRPointingTest:Teardown()
     for _,SurfaceGui in pairs(self.SurfaceGuis) do
         SurfaceGui:Destroy()
     end
+    for _,Pointer in pairs(VRPointing.VRPointers) do
+        Pointer:Destroy()
+    end
 end
 
 --[[

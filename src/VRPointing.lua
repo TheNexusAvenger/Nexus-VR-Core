@@ -8,9 +8,11 @@ local PROJECTION_DEPTH = 0.1
 
 local NexusVRCore = require(script.Parent)
 local NexusInstance = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.NexusInstance")
+local VRPointer = NexusVRCore:GetResource("VRPointer")
 local VRSurfaceGui = NexusVRCore:GetResource("VRSurfaceGui")
 
 local VRPointing = NexusInstance:Extend()
+VRPointing.VRPointers = {}
 VRPointing:SetClassName("VRPointing")
 
 
@@ -68,6 +70,21 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
     --Send the events.
     for Frame,Inputs in pairs(FrameInputs) do
         Frame:UpdateEvents(Inputs)
+    end
+
+    --Create and update the pointers.
+    for _ = #VRPointing.VRPointers + 1,#CFrames do
+        table.insert(VRPointing.VRPointers,VRPointer.new())
+    end
+    for i = 1,#CFrames do
+        local Pointer = VRPointing.VRPointers[i]
+        local Frame = RaycastedFrames[i]
+        if Frame then
+            Pointer:SetFromCFrame(CFrames[1],Frame.Depth)
+            Pointer.Visible = true
+        else
+            Pointer.Visible = false
+        end
     end
 end
 
