@@ -73,12 +73,12 @@ function VRSurfaceGui:__new(ExistingSurfaceGui)
     --in VR and uses custom inputs, so this shouldn't affect anything.
     --https://devforum.roblox.com/t/vr-immediately-crashes-when-you-try-to-interact-with-any-surface-gui/498889
     for _,Frame in pairs(self:GetDescendants()) do
-        if Frame:IsA("Frame") then
+        if Frame:IsA("GuiObject") then
             Frame.Selectable = false
         end
     end
     self.DescendantAdded:Connect(function(Frame)
-        if Frame:IsA("Frame") then
+        if Frame:IsA("GuiObject") then
             Frame.Selectable = false
         end
     end)
