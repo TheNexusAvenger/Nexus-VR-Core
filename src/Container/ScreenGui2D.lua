@@ -25,9 +25,11 @@ function ScreenGui2D:__new(ExistingScreenGui)
     self:DisableChangeReplication("Depth")
     self.Depth = 5
     self:DisableChangeReplication("FieldOfView")
-    self.FieldOfView = 50
+    self.FieldOfView = math.rad(50)
     self:DisableChangeReplication("CanvasSize")
-    self.Depth = Vector2.new(1000,1000)
+    self.CanvasSize = Vector2.new(1000,1000)
+    self:DisableChangeReplication("Easing")
+    self.Easing = 0
 end
 
 
