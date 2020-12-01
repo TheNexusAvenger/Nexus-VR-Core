@@ -103,6 +103,21 @@ NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointers"):SetRun(fu
     self:AssertClose(SurfaceGui1.LastInputs[1],Vector3.new(0.3,0.4,0.6),0.01)
     self:AssertClose(SurfaceGui2.LastInputs[1],Vector3.new(0.2,0.4,0.4),0.01)
     self:AssertClose(SurfaceGui3.LastInputs[1],Vector3.new(0.5,0.4,1),0.01)
+
+    --Assert disabled SurfaceGuis don't allow pointing.
+    SurfaceGui1.LastInputs,SurfaceGui2.LastInputs,SurfaceGui3.LastInputs = {},{},{}
+    SurfaceGui1.Enabled = false
+    VRPointing:UpdatePointers({CFrame.new(0,1,2)},{0.5})
+    self:AssertEquals(SurfaceGui1.LastInputs,{})
+    self:AssertClose(SurfaceGui2.LastInputs[1],Vector3.new(0.8,0.4,0.5),0.01)
+    self:AssertEquals(SurfaceGui3.LastInputs,{})
+    SurfaceGui1.LastInputs,SurfaceGui2.LastInputs,SurfaceGui3.LastInputs = {},{},{}
+    SurfaceGui1.Enabled = true
+    SurfaceGui1.PointingEnabled = false
+    VRPointing:UpdatePointers({CFrame.new(0,1,2)},{0.5})
+    self:AssertEquals(SurfaceGui1.LastInputs,{})
+    self:AssertClose(SurfaceGui2.LastInputs[1],Vector3.new(0.8,0.4,0.5),0.01)
+    self:AssertEquals(SurfaceGui3.LastInputs,{})
 end))
 
 --[[

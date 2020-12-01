@@ -67,6 +67,8 @@ function VRSurfaceGui:__new(ExistingSurfaceGui)
     self.ScrollLastPositions = {}
     self:DisableChangeReplication("LastInputs")
     self.LastInputs = {}
+    self:DisableChangeReplication("PointingEnabled")
+    self.PointingEnabled = true
 
     --Make the frames unselectable. This prevents a freezing problem 
     --if the SurfaceGui is not in PlayerGui. This code should only happen

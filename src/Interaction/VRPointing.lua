@@ -67,31 +67,33 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
     local RaycastedFrames = {}
     local ProjectFrames = {}
     for SurfaceGui,_ in pairs(VRSurfaceGui.VRSurfaceGuis) do
-        local Part = SurfaceGui.Adornee or SurfaceGui.Parent
-        local Face = SurfaceGui.Face
-        if Part and Part:IsA("BasePart") then
-            for InputId,ControllerCFrame in pairs(CFrames) do
-                --Set the frame if the ray cast is closer and is valid.
-                local RaycastPointX,RaycastPointY,RaycastPointDepth = Part:Raycast(ControllerCFrame,Face)
-                if RaycastPointX >= 0 and RaycastPointX <= 1 and RaycastPointY >= 0 and RaycastPointY <= 1 and RaycastPointDepth >= 0 and (SurfaceGui.AlwaysOnTop or CanRaycast(ControllerCFrame,RaycastPointDepth + 0.05,Part:GetWrappedInstance())) then
-                    if not RaycastedFrames[InputId] or RaycastedFrames[InputId].Depth > RaycastPointDepth then
-                        RaycastedFrames[InputId] = {
-                            Gui = SurfaceGui,
-                            RelativeInput = Vector3.new(RaycastPointX,RaycastPointY,PressedValues[InputId] or 0),
-                            Depth = RaycastPointDepth,
-                        }
+        if SurfaceGui.Enabled and SurfaceGui.PointingEnabled then
+            local Part = SurfaceGui.Adornee or SurfaceGui.Parent
+            local Face = SurfaceGui.Face
+            if Part and Part:IsA("BasePart") then
+                for InputId,ControllerCFrame in pairs(CFrames) do
+                    --Set the frame if the ray cast is closer and is valid.
+                    local RaycastPointX,RaycastPointY,RaycastPointDepth = Part:Raycast(ControllerCFrame,Face)
+                    if RaycastPointX >= 0 and RaycastPointX <= 1 and RaycastPointY >= 0 and RaycastPointY <= 1 and RaycastPointDepth >= 0 and (SurfaceGui.AlwaysOnTop or CanRaycast(ControllerCFrame,RaycastPointDepth + 0.05,Part:GetWrappedInstance())) then
+                        if not RaycastedFrames[InputId] or RaycastedFrames[InputId].Depth > RaycastPointDepth then
+                            RaycastedFrames[InputId] = {
+                                Gui = SurfaceGui,
+                                RelativeInput = Vector3.new(RaycastPointX,RaycastPointY,PressedValues[InputId] or 0),
+                                Depth = RaycastPointDepth,
+                            }
+                        end
                     end
-                end
 
-                --Set the frame if the projection is valid.
-                local ProjectionPointX,ProjectionPointY,ProjectionDepth = Part:Project(ControllerCFrame.Position,Face)
-                if ProjectionPointX >= 0 and ProjectionPointX <= 1 and ProjectionPointY >= 0 and ProjectionPointY <= 1 and math.abs(ProjectionDepth) <= PROJECTION_DEPTH then
-                    if not ProjectFrames[InputId] or ProjectFrames[InputId].Depth > ProjectionDepth then
-                        ProjectFrames[InputId] = {
-                            Gui = SurfaceGui,
-                            RelativeInput = Vector3.new(ProjectionPointX,ProjectionPointY,math.min((PROJECTION_DEPTH - ProjectionDepth)/PROJECTION_DEPTH,1)),
-                            Depth = ProjectionDepth,
-                        }
+                    --Set the frame if the projection is valid.
+                    local ProjectionPointX,ProjectionPointY,ProjectionDepth = Part:Project(ControllerCFrame.Position,Face)
+                    if ProjectionPointX >= 0 and ProjectionPointX <= 1 and ProjectionPointY >= 0 and ProjectionPointY <= 1 and math.abs(ProjectionDepth) <= PROJECTION_DEPTH then
+                        if not ProjectFrames[InputId] or ProjectFrames[InputId].Depth > ProjectionDepth then
+                            ProjectFrames[InputId] = {
+                                Gui = SurfaceGui,
+                                RelativeInput = Vector3.new(ProjectionPointX,ProjectionPointY,math.min((PROJECTION_DEPTH - ProjectionDepth)/PROJECTION_DEPTH,1)),
+                                Depth = ProjectionDepth,
+                            }
+                        end
                     end
                 end
             end
