@@ -67,7 +67,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
     local RaycastedFrames = {}
     local ProjectFrames = {}
     for SurfaceGui,_ in pairs(VRSurfaceGui.VRSurfaceGuis) do
-        if SurfaceGui.Enabled and SurfaceGui.PointingEnabled then
+        if SurfaceGui:IsDescendantOf(game) and SurfaceGui.Enabled and SurfaceGui.PointingEnabled then
             local Part = SurfaceGui.Adornee or SurfaceGui.Parent
             local Face = SurfaceGui.Face
             if Part and Part:IsA("BasePart") then

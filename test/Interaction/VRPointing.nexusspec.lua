@@ -40,32 +40,49 @@ Tests the UpdatePointers method.
 NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointers"):SetRun(function(self)
     --Create 2 overlapping SurfaceGuis and a SurfaceGui facing the opposite direction.
     local Part1 = Instance.new("Part")
+    Part1.Transparency = 0.5
     Part1.Size = Vector3.new(10,10,1)
     Part1.CFrame = CFrame.new(3,0,0.5)
+    Part1.Archivable = false
+    Part1.Parent = Workspace
+    table.insert(self.SurfaceGuis,Part1)
 
     local SurfaceGui1 = VRSurfaceGui.GetInstance()
     SurfaceGui1.Name = "SurfaceGui1"
     SurfaceGui1.Face = Enum.NormalId.Back
     SurfaceGui1.Adornee = Part1
+    SurfaceGui1.Archivable = false
+    SurfaceGui1.Parent = Workspace
     table.insert(self.SurfaceGuis,SurfaceGui1)
 
     local Part2 = Instance.new("Part")
+    Part2.Transparency = 0.5
     Part2.Size = Vector3.new(10,10,1)
     Part2.CFrame = CFrame.new(-3,0,-0.5)
+    Part2.Archivable = false
+    Part2.Parent = Workspace
+    table.insert(self.SurfaceGuis,Part2)
 
     local SurfaceGui2 = VRSurfaceGui.new()
     SurfaceGui2.Name = "SurfaceGui2"
     SurfaceGui2.Face = Enum.NormalId.Back
     SurfaceGui2.Parent = Part2
+    SurfaceGui2.Archivable = false
     table.insert(self.SurfaceGuis,SurfaceGui2)
 
     local Part3 = Instance.new("Part")
+    Part3.Transparency = 0.5
     Part3.Size = Vector3.new(10,10,1)
     Part3.CFrame = CFrame.new(0,0,5.5)
+    Part3.Archivable = false
+    Part3.Parent = Workspace
+    table.insert(self.SurfaceGuis,Part3)
 
     local SurfaceGui3 = VRSurfaceGui.new()
     SurfaceGui3.Name = "SurfaceGui3"
     SurfaceGui3.Adornee = Part3
+    SurfaceGui3.Archivable = false
+    SurfaceGui3.Parent = Workspace
     table.insert(self.SurfaceGuis,SurfaceGui3)
 
     --Update the pointers and assert they are corret.
