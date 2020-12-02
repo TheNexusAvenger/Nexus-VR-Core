@@ -121,7 +121,7 @@ function VRSurfaceGui:UpdateEvents(Points)
     for InputId,Point in pairs(Points) do
         local PosX,PosY,TriggerInput = Point.X * AbsoluteSize.X,Point.Y * AbsoluteSize.Y,Point.Z
         for _,Frame in pairs(self:GetDescendants()) do
-            if Frame:IsA("GuiObject") then
+            if Frame:IsA("GuiObject") and Frame.Visible then
                 local FrameSize,FramePosition = Frame.AbsoluteSize,Frame.AbsolutePosition
                 if FramePosition.X <= PosX and FramePosition.X + FrameSize.X >= PosX and FramePosition.Y <= PosY and FramePosition.Y + FrameSize.Y >= PosY then
                     if not MaxTriggerInputs[Frame] or TriggerInput > MaxTriggerInputs[Frame].Z then
