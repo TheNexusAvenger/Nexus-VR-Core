@@ -39,6 +39,10 @@ function ScreenGui3D:__new(ExistingScreenGui)
         self.Enabled = ExistingScreenGui.Enabled
     end
 
+    --Disable replication of ScreenGui properties.
+    self:DisableChangeReplication("DisplayOrder")
+    self:DisableChangeReplication("IgnoreGuiInset")
+
     --Disable replication and set the defaults.
     self:DisableChangeReplication("RotationOffset")
     self.RotationOffset = CFrame.new()
