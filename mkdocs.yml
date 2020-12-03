@@ -16,7 +16,7 @@ nav:
     - Setup: usage/setup.md
     - ScreenGuis: usage/screenguis.md
     - SurfaceGuis: usage/surfaceguis.md
-    - ClickDetectors: usage.clickdetectors.md
+    - ClickDetectors: usage/clickdetectors.md
   - API:
     - Container:
       - ScreenGui: API/Container/ScreenGui.md
