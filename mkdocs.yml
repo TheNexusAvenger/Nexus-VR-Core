@@ -13,17 +13,18 @@ nav:
   - Home: index.md
   - Design: design.md
   - Usage:
-    - Setup: setup.md
-    - ScreenGuis: screenguis.md
-    - SurfaceGuis: surfaceguis.md
+    - Setup: usage/setup.md
+    - ScreenGuis: usage/screenguis.md
+    - SurfaceGuis: usage/surfaceguis.md
+    - ClickDetectors: usage.clickdetectors.md
   - API:
     - Container:
-      - ScreenGui: ScreenGui.md
-      - VRSurfaceGui: SurfaceGui.md
+      - ScreenGui: API/Container/ScreenGui.md
+      - VRSurfaceGui: API/Container/SurfaceGui.md
     - Interaction:
-      - VRPart: VRPart.md
-      - VRPointer: VRPointer.md
-      - VRPointing: VRPointing.md
+      - VRPart: API/Interaction/VRPart.md
+      - VRPointer: API/Interaction/VRPointer.md
+      - VRPointing: API/Interaction/VRPointing.md
 
 markdown_extensions:
   - admonition
