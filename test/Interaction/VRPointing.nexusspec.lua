@@ -135,6 +135,16 @@ NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointers"):SetRun(fu
     self:AssertEquals(SurfaceGui1.LastInputs,{})
     self:AssertClose(SurfaceGui2.LastInputs[1],Vector3.new(0.8,0.4,0.5),0.01)
     self:AssertEquals(SurfaceGui3.LastInputs,{})
+    SurfaceGui1.PointingEnabled = true
+
+    --Assert enabling and disabling pointers is correct.
+    self:AssertEquals(#VRPointing.VRPointers,2,"Total pointers isn't correct.")
+    VRPointing.PointersEnabled = false
+    VRPointing:UpdatePointers({CFrame.new(0,1,2),CFrame.new(1,1,2)},{0.5,0.5})
+    self:AssertEquals(#VRPointing.VRPointers,0,"Total pointers isn't correct.")
+    VRPointing.PointersEnabled = true
+    VRPointing:UpdatePointers({CFrame.new(0,1,2),CFrame.new(1,1,2)},{0.5,0.5})
+    self:AssertEquals(#VRPointing.VRPointers,2,"Total pointers isn't correct.")
 end))
 
 --[[

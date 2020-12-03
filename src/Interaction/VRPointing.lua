@@ -22,6 +22,7 @@ local VRSurfaceGui = NexusVRCore:GetResource("Container.VRSurfaceGui")
 local VRPointing = NexusInstance:Extend()
 VRPointing.VRService = NexusWrappedInstance.GetInstance(VRService)
 VRPointing.VRPointers = {}
+VRPointing.PointersEnabled = true
 VRPointing.Inputs = {
     [Enum.KeyCode.ButtonL2] = 0,
     [Enum.KeyCode.ButtonR2] = 0,
@@ -116,19 +117,26 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
         Frame:UpdateEvents(Inputs)
     end
 
-    --Create and update the pointers.
-    for _ = #VRPointing.VRPointers + 1,#CFrames do
-        table.insert(VRPointing.VRPointers,VRPointer.new())
-    end
-    for i = 1,#CFrames do
-        local Pointer = VRPointing.VRPointers[i]
-        local Frame = RaycastedFrames[i]
-        if Frame then
-            Pointer:SetFromCFrame(CFrames[i],Frame.Depth)
-            Pointer.Visible = true
-        else
-            Pointer.Visible = false
+    if VRPointing.PointersEnabled then
+        --Create and update the pointers.
+        for _ = #VRPointing.VRPointers + 1,#CFrames do
+            table.insert(VRPointing.VRPointers,VRPointer.new())
         end
+        for i,Pointer in pairs(VRPointing.VRPointers) do
+            local Frame = RaycastedFrames[i]
+            if Frame then
+                Pointer:SetFromCFrame(CFrames[i],Frame.Depth)
+                Pointer.Visible = true
+            else
+                Pointer.Visible = false
+            end
+        end
+    else
+        --Destroy the pointers.
+        for _,Pointer in pairs(VRPointing.VRPointers) do
+            Pointer:Destroy()
+        end
+        VRPointing.VRPointers = {}
     end
 end
 
