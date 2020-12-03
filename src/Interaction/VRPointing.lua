@@ -112,8 +112,11 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
 
     --Determine the ClickDetector events.
     local ClickDectorsHit = {}
+    local ClickDetectorRaycastParams = RaycastParams.new()
+    ClickDetectorRaycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    ClickDetectorRaycastParams.FilterDescendantsInstances = {Workspace.CurrentCamera}
     for InputId,ControllerCFrame in pairs(CFrames) do
-        local RaycastResult = Workspace:Raycast(ControllerCFrame.Position,ControllerCFrame.LookVector * CLICKDETECTOR_RAYCAST_DISTANCE)
+        local RaycastResult = Workspace:Raycast(ControllerCFrame.Position,ControllerCFrame.LookVector * CLICKDETECTOR_RAYCAST_DISTANCE,ClickDetectorRaycastParams)
         if RaycastResult and RaycastResult.Instance then
             local ClickDetector = RaycastResult.Instance:FindFirstChildOfClass("ClickDetector")
             if ClickDetector then
