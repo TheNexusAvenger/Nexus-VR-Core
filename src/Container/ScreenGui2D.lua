@@ -30,6 +30,8 @@ function ScreenGui2D:__new(ExistingScreenGui)
     self.CanvasSize = Vector2.new(1000,1000)
     self:DisableChangeReplication("Easing")
     self.Easing = 0
+    self:DisableChangeReplication("PointingEnabled")
+    self.PointingEnabled = true
 end
 
 
