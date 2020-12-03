@@ -5,10 +5,14 @@ Manages pointing from VR inputs.
 --]]
 
 local PROJECTION_DEPTH = 0.1
+local TRIGGER_DOWN_THRESHOLD = 0.8
+local TRIGGER_UP_THRESHOLD = 0.6
+local CLICKDETECTOR_RAYCAST_DISTANCE = 1000
 
 
 
 local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local VRService = game:GetService("VRService")
@@ -28,6 +32,7 @@ VRPointing.Inputs = {
     [Enum.KeyCode.ButtonR2] = 0,
     [Enum.UserInputType.MouseButton1] = false,
 }
+VRPointing.ClickDetectorEvents = {}
 VRPointing:SetClassName("VRPointing")
 
 
@@ -67,6 +72,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
     --Determine the frames to interact with.
     local RaycastedFrames = {}
     local ProjectFrames = {}
+    local Pointers = {}
     for SurfaceGui,_ in pairs(VRSurfaceGui.VRSurfaceGuis) do
         if SurfaceGui:IsDescendantOf(game) and SurfaceGui.Enabled and SurfaceGui.PointingEnabled then
             local Part = SurfaceGui.Adornee or SurfaceGui.Parent
@@ -81,7 +87,9 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
                                 Gui = SurfaceGui,
                                 RelativeInput = Vector3.new(RaycastPointX,RaycastPointY,PressedValues[InputId] or 0),
                                 Depth = RaycastPointDepth,
+                                Part = Part,
                             }
+                            Pointers[InputId] = RaycastedFrames[InputId]
                         end
                     end
 
@@ -93,8 +101,36 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
                                 Gui = SurfaceGui,
                                 RelativeInput = Vector3.new(ProjectionPointX,ProjectionPointY,math.min((PROJECTION_DEPTH - ProjectionDepth)/PROJECTION_DEPTH,1)),
                                 Depth = ProjectionDepth,
+                                Part = Part,
                             }
                         end
+                    end
+                end
+            end
+        end
+    end
+
+    --Determine the ClickDetector events.
+    local ClickDectorsHit = {}
+    for InputId,ControllerCFrame in pairs(CFrames) do
+        local RaycastResult = Workspace:Raycast(ControllerCFrame.Position,ControllerCFrame.LookVector * CLICKDETECTOR_RAYCAST_DISTANCE)
+        if RaycastResult and RaycastResult.Instance then
+            local ClickDetector = RaycastResult.Instance:FindFirstChildOfClass("ClickDetector")
+            if ClickDetector then
+                ClickDetector = NexusWrappedInstance.GetInstance(ClickDetector)
+                local Distance = (ControllerCFrame.Position - RaycastResult.Instance.Position).Magnitude
+                if Distance <= ClickDetector.MaxActivationDistance and (not RaycastedFrames[InputId] or RaycastedFrames[InputId].Part:GetWrappedInstance() ~= RaycastResult.Instance) then
+                    --Store the pointer.
+                    RaycastedFrames[InputId] = nil
+                    Pointers[InputId] = {
+                        ClickDetector = ClickDetector,
+                        Depth = (ControllerCFrame.Position - RaycastResult.Position).Magnitude,
+                    }
+                    
+                    --Add the ClickDetector to invoke.
+                    local InputValue = PressedValues[InputId]
+                    if not ClickDectorsHit[ClickDetector] or ClickDectorsHit[ClickDetector] < InputValue then
+                        ClickDectorsHit[ClickDetector] = InputValue
                     end
                 end
             end
@@ -112,9 +148,38 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
         end
     end
 
-    --Send the events.
+    --Send the events for the frames.
     for Frame,Inputs in pairs(FrameInputs) do
         Frame:UpdateEvents(Inputs)
+    end
+
+    --Send the eveents for the ClickDetectors.
+    for ClickDetector,Value in pairs(ClickDectorsHit) do
+        --Send the hover event.
+        if VRPointing.ClickDetectorEvents[ClickDetector] == nil then
+            ClickDetector.MouseHoverEnter:Fire(Players.LocalPlayer)
+            VRPointing.ClickDetectorEvents[ClickDetector] = false
+        end
+
+        --Send the click events.
+        if Value >= TRIGGER_DOWN_THRESHOLD then
+            if VRPointing.ClickDetectorEvents[ClickDetector] == false then
+                ClickDetector.MouseClick:Fire(Players.LocalPlayer)
+                VRPointing.ClickDetectorEvents[ClickDetector] = true
+            end
+        elseif Value <= TRIGGER_UP_THRESHOLD then
+            VRPointing.ClickDetectorEvents[ClickDetector] = false
+        end
+    end
+    local ClickDetectorsToEnd = {}
+    for ClickDetector,_ in pairs(VRPointing.ClickDetectorEvents) do
+        if not ClickDectorsHit[ClickDetector] then
+            ClickDetector.MouseHoverLeave:Fire(Players.LocalPlayer)
+            table.insert(ClickDetectorsToEnd,ClickDetector)
+        end
+    end
+    for _,ClickDetector in pairs(ClickDetectorsToEnd) do
+        VRPointing.ClickDetectorEvents[ClickDetector] = nil
     end
 
     if VRPointing.PointersEnabled then
@@ -123,7 +188,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
             table.insert(VRPointing.VRPointers,VRPointer.new())
         end
         for i,Pointer in pairs(VRPointing.VRPointers) do
-            local Frame = RaycastedFrames[i]
+            local Frame = Pointers[i]
             if Frame then
                 Pointer:SetFromCFrame(CFrames[i],Frame.Depth)
                 Pointer.Visible = true

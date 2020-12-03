@@ -7,8 +7,10 @@ Tests for VRPointing.
 local NexusUnitTesting = require("NexusUnitTesting")
 
 local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
 
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
+local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 local VRSurfaceGui = NexusVRCore:GetResource("Container.VRSurfaceGui")
 local VRPointing = NexusVRCore:GetResource("Interaction.VRPointing")
 local VRPointingTest = NexusUnitTesting.UnitTest:Extend()
@@ -85,7 +87,7 @@ NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointers"):SetRun(fu
     SurfaceGui3.Parent = Workspace
     table.insert(self.SurfaceGuis,SurfaceGui3)
 
-    --Update the pointers and assert they are corret.
+    --Update the pointers and assert they are correct.
     VRPointing:UpdatePointers({CFrame.new(0,1,2)},{0.5})
     self:AssertClose(SurfaceGui1.LastInputs[1],Vector3.new(0.2,0.4,0.5),0.01)
     self:AssertEquals(SurfaceGui2.LastInputs,{})
@@ -145,6 +147,101 @@ NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointers"):SetRun(fu
     VRPointing.PointersEnabled = true
     VRPointing:UpdatePointers({CFrame.new(0,1,2),CFrame.new(1,1,2)},{0.5,0.5})
     self:AssertEquals(#VRPointing.VRPointers,2,"Total pointers isn't correct.")
+end))
+
+--[[
+Tests the UpdatePointers method with ClickDetectors.
+--]]
+NexusUnitTesting:RegisterUnitTest(VRPointingTest.new("UpdatePointersClickDetectors"):SetRun(function(self)
+    --Create 2 overlapping parts. 1 with a SurfaceGui and 1 with a ClickDetector.
+    local Part1 = Instance.new("Part")
+    Part1.Transparency = 0.5
+    Part1.Size = Vector3.new(10,10,1)
+    Part1.CFrame = CFrame.new(3,0,0.5)
+    Part1.Archivable = false
+    Part1.Parent = Workspace
+    table.insert(self.SurfaceGuis,Part1)
+
+    local SurfaceGui1 = VRSurfaceGui.GetInstance()
+    SurfaceGui1.Name = "SurfaceGui1"
+    SurfaceGui1.Face = Enum.NormalId.Back
+    SurfaceGui1.Adornee = Part1
+    SurfaceGui1.Archivable = false
+    SurfaceGui1.Parent = Workspace
+    table.insert(self.SurfaceGuis,SurfaceGui1)
+
+    local Part2 = Instance.new("Part")
+    Part2.Transparency = 0.5
+    Part2.Size = Vector3.new(10,10,1)
+    Part2.CFrame = CFrame.new(-3,0,-0.5)
+    Part2.Archivable = false
+    Part2.Parent = Workspace
+    table.insert(self.SurfaceGuis,Part2)
+
+    local ClickDetector = NexusWrappedInstance.new("ClickDetector")
+    ClickDetector.MaxActivationDistance = 5
+    ClickDetector.Parent = Part2
+    ClickDetector.Archivable = false
+    table.insert(self.SurfaceGuis,ClickDetector)
+
+    --Connect the ClickDetector events.
+    local MouseHoverEnterEvents,MouseHoverLeaveEvents,MouseClickEvents = 0,0,0
+    ClickDetector.MouseHoverEnter:Connect(function()
+        MouseHoverEnterEvents = MouseHoverEnterEvents + 1
+    end)
+    ClickDetector.MouseHoverLeave:Connect(function()
+        MouseHoverLeaveEvents = MouseHoverLeaveEvents + 1
+    end)
+    ClickDetector.MouseClick:Connect(function()
+        MouseClickEvents = MouseClickEvents + 1
+    end)
+
+    --Update the pointers and assert they are correct.
+    VRPointing:UpdatePointers({CFrame.new(0,1,2)},{0.4})
+    self:AssertEquals(MouseHoverEnterEvents,0,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,0,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,0,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,2)},{0.4})
+    self:AssertEquals(MouseHoverEnterEvents,1,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,0,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,0,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,2)},{0.8})
+    self:AssertEquals(MouseHoverEnterEvents,1,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,0,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,1,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,2)},{0.9})
+    self:AssertEquals(MouseHoverEnterEvents,1,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,0,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,1,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,2)},{0.4})
+    self:AssertEquals(MouseHoverEnterEvents,1,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,0,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,1,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,2)},{0.8})
+    self:AssertEquals(MouseHoverEnterEvents,1,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,0,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,2,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(0,1,2)},{0.4})
+    self:AssertEquals(MouseHoverEnterEvents,1,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,1,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,2,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,2)},{0.8})
+    self:AssertEquals(MouseHoverEnterEvents,2,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,1,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,3,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(-7,1,6)},{0.8})
+    self:AssertEquals(MouseHoverEnterEvents,2,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,2,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,3,"Mouse click events are incorrect.")
+    VRPointing:UpdatePointers({CFrame.new(0,1,2)},{0.4})
+    self:AssertEquals(MouseHoverEnterEvents,2,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,2,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,3,"Mouse click events are incorrect.")
+    Part2.CFrame = CFrame.new(-3,0,1.5)
+    VRPointing:UpdatePointers({CFrame.new(0,1,3)},{0.4})
+    self:AssertEquals(MouseHoverEnterEvents,3,"Mouse enter events are incorrect.")
+    self:AssertEquals(MouseHoverLeaveEvents,2,"Mouse leave events are incorrect.")
+    self:AssertEquals(MouseClickEvents,3,"Mouse click events are incorrect.")
 end))
 
 --[[
