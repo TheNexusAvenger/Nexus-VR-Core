@@ -19,12 +19,12 @@ nav:
     - ClickDetectors: usage/clickdetectors.md
   - API:
     - Container:
-      - ScreenGui: API/Container/ScreenGui.md
-      - VRSurfaceGui: API/Container/SurfaceGui.md
+      - ScreenGui: api/Container/ScreenGui.md
+      - VRSurfaceGui: api/Container/VRSurfaceGui.md
     - Interaction:
-      - VRPart: API/Interaction/VRPart.md
-      - VRPointer: API/Interaction/VRPointer.md
-      - VRPointing: API/Interaction/VRPointing.md
+      - VRPart: api/Interaction/VRPart.md
+      - VRPointer: api/Interaction/VRPointer.md
+      - VRPointing: api/Interaction/VRPointing.md
 
 markdown_extensions:
   - admonition
