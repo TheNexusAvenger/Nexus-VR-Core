@@ -98,6 +98,7 @@ function ScreenGui3D:UpdateSize()
     else
         self.Adornee.Size = Vector3.new(Width * (self.CanvasSize.X/self.CanvasSize.Y),Width,0)
     end
+    self:GetWrappedInstance().CanvasSize = self.CanvasSize
 end
 
 --[[
