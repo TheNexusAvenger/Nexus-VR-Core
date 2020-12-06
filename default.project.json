@@ -1,5 +1,5 @@
 {
-	"name": "Nexus-Wrapped-Instance",
+	"name": "Nexus-VR-Core",
 	"tree": {
 		"$className": "DataModel",
 		"ReplicatedStorage": {
