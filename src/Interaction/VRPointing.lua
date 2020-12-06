@@ -54,7 +54,7 @@ local function CanRaycast(StartCF,Distance,TargetPart)
     end
 
     --Return false if an opague part was hit.
-    if RaycastResult.Instance.Transparency == 0 then
+    if RaycastResult.Instance.Transparency == 0 and RaycastResult.Instance.LocalTransparencyModifier == 0 then
         return false
     end
 
@@ -114,7 +114,7 @@ function VRPointing:UpdatePointers(CFrames,PressedValues)
     local ClickDectorsHit = {}
     local ClickDetectorRaycastParams = RaycastParams.new()
     ClickDetectorRaycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-    ClickDetectorRaycastParams.FilterDescendantsInstances = {Workspace.CurrentCamera}
+    ClickDetectorRaycastParams.FilterDescendantsInstances = {Workspace.CurrentCamera,Players.LocalPlayer.Character}
     for InputId,ControllerCFrame in pairs(CFrames) do
         local RaycastResult = Workspace:Raycast(ControllerCFrame.Position,ControllerCFrame.LookVector * CLICKDETECTOR_RAYCAST_DISTANCE,ClickDetectorRaycastParams)
         if RaycastResult and RaycastResult.Instance then
