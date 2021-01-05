@@ -1,7 +1,7 @@
 # Setup
 !!! note
     If Nexus VR Character Model V.2.0.0 or newer is being
-    used, the no setup is required since it loads Nexus VR
+    used, then no setup is required since it loads Nexus VR
     Core and sets up pointing natively. This page is intended
     for developers not using Nexus VR Character Model.
 
