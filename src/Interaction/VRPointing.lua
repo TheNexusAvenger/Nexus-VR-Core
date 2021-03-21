@@ -270,7 +270,7 @@ function VRPointing:RunUpdating()
     end
     
     --Connect updating the inpputs.
-    RunService:BindToRenderStep("NexusVRCorePointingUpdate",Enum.RenderPriority.Camera.Value - 1,function()
+    RunService:BindToRenderStep("NexusVRCorePointingUpdate",Enum.RenderPriority.Camera.Value + 1,function()
         VRPointing:UpdatePointers(VRPointing:GetVRInputs())
     end)
 end
