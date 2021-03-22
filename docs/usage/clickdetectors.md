@@ -15,9 +15,9 @@ local ClickDetector = NexusWrappedInstance.new("ClickDetector")
 ClickDetector.Parent = game:GetService("Workspace"):WaitForChild("SomePart")
 
 --Existing ClickDetector.
-local ClickDetector = NexusWrappedInstance.GetInstancee(game:GetService("Workspace"):WaitForChild("SomePart"):WaitForChild("ClickDetector"))
+local ClickDetector = NexusWrappedInstance.GetInstance(game:GetService("Workspace"):WaitForChild("SomePart"):WaitForChild("ClickDetector"))
 
-TestButton.MouseClick:Connect(function()
+ClickDetector.MouseClick:Connect(function()
     print("Button pressed!")
 end)
 ```
