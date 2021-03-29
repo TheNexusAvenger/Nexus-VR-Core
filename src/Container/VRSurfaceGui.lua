@@ -159,17 +159,15 @@ function VRSurfaceGui:UpdateEvents(Points)
     local AbsoluteSize = self.AbsoluteSize
     for InputId,Point in pairs(Points) do
         local PosX,PosY,TriggerInput = Point.X * AbsoluteSize.X,Point.Y * AbsoluteSize.Y,Point.Z
-        for _,Frame in pairs(self:GetDescendants()) do
-            if Frame:IsA("GuiObject") and Frame.Visible then
-                local FrameSize,FramePosition = Frame.AbsoluteSize,Frame.AbsolutePosition
-                if FramePosition.X <= PosX and FramePosition.X + FrameSize.X >= PosX and FramePosition.Y <= PosY and FramePosition.Y + FrameSize.Y >= PosY then
-                    --Re-wrap the frame since GetVisibleFrames returns unwrapped frames.
-                    local WrappedFrame = NexusWrappedInstance.GetInstance(Frame)
-                    if not MaxTriggerInputs[WrappedFrame] or TriggerInput > MaxTriggerInputs[WrappedFrame].Z then
-                        --Store the frame.
-                        MaxTriggerInputs[WrappedFrame] = Vector3.new(PosX,PosY,TriggerInput)
-                        FrameInputId[WrappedFrame] = InputId
-                    end
+        for _,Frame in pairs(self:GetVisibleFrames()) do
+            local FrameSize,FramePosition = Frame.AbsoluteSize,Frame.AbsolutePosition
+            if FramePosition.X <= PosX and FramePosition.X + FrameSize.X >= PosX and FramePosition.Y <= PosY and FramePosition.Y + FrameSize.Y >= PosY then
+                --Re-wrap the frame since GetVisibleFrames returns unwrapped frames.
+                local WrappedFrame = NexusWrappedInstance.GetInstance(Frame)
+                if not MaxTriggerInputs[WrappedFrame] or TriggerInput > MaxTriggerInputs[WrappedFrame].Z then
+                    --Store the frame.
+                    MaxTriggerInputs[WrappedFrame] = Vector3.new(PosX,PosY,TriggerInput)
+                    FrameInputId[WrappedFrame] = InputId
                 end
             end
         end
