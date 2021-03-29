@@ -110,6 +110,45 @@ function VRSurfaceGui:__createindexmethod(Object,Class,RootClass)
 end
 
 --[[
+Returns the visible frames in the SurfaceGui.
+If a parent is not visible of a given frame, then
+it is not returned. The frames returned are NOT
+wrapped for performance reasons since reading
+properties from Nexus Wrapped Instances is slow.
+--]]
+function VRSurfaceGui:GetVisibleFrames()
+    --Create the queue of frames to check.
+    --This is done to use an interative approach instead of a recursive approach.
+    local FrameQueue = {}
+    for _,Frame in pairs(self:GetWrappedInstance():GetChildren()) do
+        if Frame:IsA("GuiObject") and Frame.Visible then
+            table.insert(FrameQueue,Frame)
+        end
+    end
+
+    --Iterate over the queue until it is empty, adding visible children in the process.
+    --The last index is removed to prevent constantly shifting tables. Technically it is a
+    --stack, but it doesn't really matter in this case since no order is guarenteed.
+    local VisibleFrames = {}
+    while #FrameQueue > 0 do
+        --Pop the last entry and add it to the visible frames.
+        --The check if it is visible was done already.
+        local Frame = table.remove(FrameQueue)
+        table.insert(VisibleFrames,Frame)
+
+        --Add the visible children.
+        for _,ChildFrame in pairs(Frame:GetChildren()) do
+            if ChildFrame:IsA("GuiObject") and ChildFrame.Visible then
+                table.insert(FrameQueue,ChildFrame)
+            end
+        end
+    end
+
+    --Return the visible frames.
+    return VisibleFrames
+end
+
+--[[
 Updates the events of frames with the
 given relative points.
 --]]
@@ -124,10 +163,12 @@ function VRSurfaceGui:UpdateEvents(Points)
             if Frame:IsA("GuiObject") and Frame.Visible then
                 local FrameSize,FramePosition = Frame.AbsoluteSize,Frame.AbsolutePosition
                 if FramePosition.X <= PosX and FramePosition.X + FrameSize.X >= PosX and FramePosition.Y <= PosY and FramePosition.Y + FrameSize.Y >= PosY then
-                    if not MaxTriggerInputs[Frame] or TriggerInput > MaxTriggerInputs[Frame].Z then
+                    --Re-wrap the frame since GetVisibleFrames returns unwrapped frames.
+                    local WrappedFrame = NexusWrappedInstance.GetInstance(Frame)
+                    if not MaxTriggerInputs[WrappedFrame] or TriggerInput > MaxTriggerInputs[WrappedFrame].Z then
                         --Store the frame.
-                        MaxTriggerInputs[Frame] = Vector3.new(PosX,PosY,TriggerInput)
-                        FrameInputId[Frame] = InputId
+                        MaxTriggerInputs[WrappedFrame] = Vector3.new(PosX,PosY,TriggerInput)
+                        FrameInputId[WrappedFrame] = InputId
                     end
                 end
             end

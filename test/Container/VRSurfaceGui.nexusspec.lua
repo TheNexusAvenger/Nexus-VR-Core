@@ -31,6 +31,45 @@ function VRSurfaceGuiTest:Teardown()
 end
 
 --[[
+Tests the GetVisibleFrames method.
+--]]
+NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("GetVisibleFrames"):SetRun(function(self)
+    --Add several visible frames.
+    local Frame1 = NexusWrappedInstance.new("Frame")
+    Frame1.Parent = self.CuT
+    local Frame2 = NexusWrappedInstance.new("Frame")
+    Frame2.Parent = Frame1
+    local Frame3 = NexusWrappedInstance.new("Frame")
+    Frame3.Parent = Frame2
+    local Frame4 = NexusWrappedInstance.new("Frame")
+    Frame4.Parent = Frame1
+    local Frame5 = NexusWrappedInstance.new("Frame")
+    Frame5.Parent = self.CuT
+
+    --Assert the total returned frames are correct.
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),5,"Total hidden frames is incorrect.")
+    Frame1.Visible = false
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),1,"Total hidden frames is incorrect.")
+    Frame1.Visible = true
+    Frame2.Visible = false
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),3,"Total hidden frames is incorrect.")
+    Frame2.Visible = true
+    Frame3.Visible = false
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),4,"Total hidden frames is incorrect.")
+    Frame3.Visible = true
+    Frame4.Visible = false
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),4,"Total hidden frames is incorrect.")
+    Frame4.Visible = true
+    Frame5.Visible = false
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),4,"Total hidden frames is incorrect.")
+    Frame1.Visible = false
+    Frame2.Visible = false
+    Frame3.Visible = false
+    Frame4.Visible = false
+    self:AssertEquals(#self.CuT:GetVisibleFrames(),0,"Total hidden frames is incorrect.")
+end))
+
+--[[
 Tests the UpdateEvents method.
 --]]
 NexusUnitTesting:RegisterUnitTest(VRSurfaceGuiTest.new("UpdateEvents"):SetRun(function(self)
