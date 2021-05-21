@@ -58,13 +58,13 @@ function ScreenGui3D:__new(ExistingScreenGui)
     self.LastRotation = CFrame.new(Workspace.CurrentCamera:GetRenderCFrame().Position):inverse() * Workspace.CurrentCamera:GetRenderCFrame()
 
     --Connect updating the size.
-    self:GetPropertyChangedSignal("Depth"):Connect(function()
+    self:AddPropertyFinalizer("Depth",function()
         self:UpdateSize()
     end)
-    self:GetPropertyChangedSignal("FieldOfView"):Connect(function()
+    self:AddPropertyFinalizer("FieldOfView",function()
         self:UpdateSize()
     end)
-    self:GetPropertyChangedSignal("CanvasSize"):Connect(function()
+    self:AddPropertyFinalizer("CanvasSize",function()
         self:UpdateSize()
     end)
 

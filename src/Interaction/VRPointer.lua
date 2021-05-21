@@ -68,24 +68,24 @@ function VRPointer:__new()
     self.EndSphere = EndSphere
 
     --Connect changes to the properties.
-    self:GetPropertyChangedSignal("Color3"):Connect(function()
-        Beam.Color = ColorSequence.new(self.Color3)
-        EndSphere.Color3 = self.Color3
+    self:AddPropertyFinalizer("Color3",function(_,Value)
+        Beam.Color = ColorSequence.new(Value)
+        EndSphere.Color3 = Value
     end)
-    self:GetPropertyChangedSignal("Transparency"):Connect(function()
-        EndSphere.Transparency = self.Transparency
+    self:AddPropertyFinalizer("Transparency",function(_,Value)
+        EndSphere.Transparency = Value
         self:UpdateTransparency()
     end)
-    self:GetPropertyChangedSignal("Visible"):Connect(function()
-        EndSphere.Visible = self.Visible
-        Beam.Enabled = self.Visible
+    self:AddPropertyFinalizer("Visible",function(_,Value)
+        EndSphere.Visible = Value
+        Beam.Enabled = Value
     end)
-    self:GetPropertyChangedSignal("StartPosition"):Connect(function()
-        StartPart.CFrame = CFrame.new(self.StartPosition)
+    self:AddPropertyFinalizer("StartPosition",function(_,Value)
+        StartPart.CFrame = CFrame.new(Value)
         self:UpdateTransparency()
     end)
-    self:GetPropertyChangedSignal("EndPosition"):Connect(function()
-        EndPart.CFrame = CFrame.new(self.EndPosition)
+    self:AddPropertyFinalizer("EndPosition",function(_,Value)
+        EndPart.CFrame = CFrame.new(Value)
         self:UpdateTransparency()
     end)
 
