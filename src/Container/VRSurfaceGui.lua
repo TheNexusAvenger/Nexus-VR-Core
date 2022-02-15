@@ -11,7 +11,6 @@ local TRIGGER_UP_THRESHOLD = 0.6
 
 local NexusVRCore = require(script.Parent.Parent)
 local NexusObject = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.NexusObject")
-local NexusPropertyValidator = NexusVRCore:GetResource("NexusWrappedInstance.NexusInstance.PropertyValidator.NexusPropertyValidator")
 local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 local VRPart = NexusVRCore:GetResource("Interaction.VRPart")
 
@@ -23,7 +22,6 @@ setmetatable(VRSurfaceGui.CachedInstances,{__mode="k"})
 
 local VRPartValidator = NexusObject:Extend()
 VRPartValidator:SetClassName("VRPartValidator")
-VRPartValidator:Implements(NexusPropertyValidator)
 
 
 
