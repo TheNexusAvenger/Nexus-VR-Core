@@ -1,27 +1,12 @@
 {
-	"name": "Nexus-VR-Core",
-	"tree": {
-		"$className": "DataModel",
-		"ReplicatedStorage": {
-			"$className": "ReplicatedStorage",
-            "NexusVRCore": {
-				"$path": "./src",
-				"NexusProject": {
-                    "$path": "./module/Nexus-Project/src",
-                    "NexusInstance": {
-                        "$path": "./module/Nexus-Project/module/Nexus-Instance/src"
-                    }
-                },
-                "NexusWrappedInstance": {
-                    "$path": "./module/Nexus-Wrapped-Instance/src",
-                    "NexusInstance": {
-                        "$path": "./module/Nexus-Wrapped-Instance/module/Nexus-Instance/src"
-                    }
-                }
-            },
-			"NexusVRCoreTest": {
-				"$path": "./test"
-			}
-		}
-	}
+    "name": "NexusVRCore",
+    "tree": {
+        "$path": "./src",
+        "NexusProject": {
+            "$path": "./module/Nexus-Project/"
+        },
+        "NexusWrappedInstance": {
+            "$path": "./module/Nexus-Wrapped-Instance/"
+        }
+    }
 }

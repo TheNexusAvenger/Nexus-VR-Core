@@ -1,0 +1,15 @@
+{
+    "name": "Nexus-VR-Core",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "NexusVRCore": {
+                "$path": "."
+            },
+            "NexusVRCoreTest": {
+                "$path": "./test"
+            }
+        }
+    }
+}
