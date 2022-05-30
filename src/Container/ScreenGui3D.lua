@@ -24,12 +24,18 @@ function ScreenGui3D:__new(ExistingScreenGui)
     self:InitializeSuper(Instance.new("SurfaceGui"))
 
     --Create the Adornee.
+    local NexusVRCoreContainer = Workspace.CurrentCamera:FindFirstChild("NexusVRCoreContainer")
+    if not NexusVRCoreContainer then
+        NexusVRCoreContainer = Instance.new("Folder")
+        NexusVRCoreContainer.Name = "NexusVRCoreContainer"
+        NexusVRCoreContainer.Parent = Workspace.CurrentCamera
+    end
     local Adornee = VRPart.new()
     Adornee.Transparency = 1
     Adornee.Anchored = true
     Adornee.CanCollide = false
+    Adornee.Parent = NexusVRCoreContainer
     self.Adornee = Adornee
-    Adornee.Parent = self
     self.Face = Enum.NormalId.Back
 
     --Set the properties.
@@ -118,6 +124,14 @@ function ScreenGui3D:UpdateCFrame(DeltaTime)
 
     --Set the CFrame.
     self.Adornee.CFrame = CFrame.new(CameraCFrame.Position) * self.LastRotation * self.RotationOffset * CFrame.new(0,0,-self.Depth)
+end
+
+--[[
+Destroys the ScreenGui.
+--]]
+function ScreenGui3D:Destroy()
+    self.super:Destroy()
+    self.Adornee:Destroy()
 end
 
 
