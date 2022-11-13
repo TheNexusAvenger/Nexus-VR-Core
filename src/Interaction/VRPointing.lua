@@ -289,9 +289,13 @@ end
 local DeprecationNoticePrinted = false
 local OriginalWrappedInstanceNew = NexusWrappedInstance.__new
 function NexusWrappedInstance.__new(...)
-    if not DeprecationNoticePrinted and not string.find(debug.traceback("", 2), "VRPointing") then
-        DeprecationNoticePrinted = true
-        warn(DEPRECATION_WARNING)
+    local Traceback = debug.traceback("", 2)
+    if not DeprecationNoticePrinted and not string.find(Traceback, "VRPointing") and not string.find(Traceback, "NexusButton") and not string.find(Traceback, "NexusVRCharacterModel.UI") then
+        local Type = ({...})[2]
+        if (typeof(Type) == "string" and Type ~= "Part" and Type ~= "SurfaceGui" and Type ~= "ScreenGui") or (typeof(Type) == "Instance" and not Type:IsA("SurfaceGui") and not Type:IsA("ScreenGui") and not Type:IsA("Part")) then
+            DeprecationNoticePrinted = true
+            warn(DEPRECATION_WARNING)
+        end
     end
     return OriginalWrappedInstanceNew(...)
 end
