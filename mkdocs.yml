@@ -25,6 +25,8 @@ nav:
       - VRPart: api/Interaction/VRPart.md
       - VRPointer: api/Interaction/VRPointer.md
       - VRPointing: api/Interaction/VRPointing.md
+    - Utility:
+      - PartUtility: api/Utility/PartUtility.md
 
 markdown_extensions:
   - admonition
