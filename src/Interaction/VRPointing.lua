@@ -4,6 +4,8 @@ TheNexusAvenger
 Manages pointing from VR inputs.
 --]]
 
+local DEPRECATION_WARNING = "Nexus VR Core's custom pointing is deprecated and will be removed in a future version.\n\tOn January 15th 2023, Nexus VR Character Model will no longer enable custom updating.\n\tOn April 15th, NexusWrappedInstance will not be included.\n\tMore information: https://github.com/TheNexusAvenger/Nexus-VR-Core/blob/master/docs/custom-pointing-deprecation.md"
+
 local PROJECTION_DEPTH = 0.1
 local TRIGGER_DOWN_THRESHOLD = 0.8
 local TRIGGER_UP_THRESHOLD = 0.6
@@ -237,6 +239,11 @@ end
 Connects the inputs for VR inputs.
 --]]
 function VRPointing:ConnectEvents()
+    if self.ConnectEventsCalled then
+        return
+    end
+    self.ConnectEventsCalled = true
+
     UserInputService.InputBegan:Connect(function(Input)
         if typeof(VRPointing.Inputs[Input.UserInputType]) == "boolean" then
             VRPointing.Inputs[Input.UserInputType] = true
@@ -265,14 +272,28 @@ Runs updating pointing.
 --]]
 function VRPointing:RunUpdating()
     --Return if VR is not enabled.
-    if not UserInputService.VREnabled then
+    if not UserInputService.VREnabled or self.RunUpdatingCalled then
         return
     end
+    self.RunUpdatingCalled = true
     
     --Connect updating the inpputs.
     RunService:BindToRenderStep("NexusVRCorePointingUpdate",Enum.RenderPriority.Camera.Value + 1,function()
         VRPointing:UpdatePointers(VRPointing:GetVRInputs())
     end)
+end
+
+
+
+--Set up the deprecation warning.
+local DeprecationNoticePrinted = false
+local OriginalWrappedInstanceNew = NexusWrappedInstance.__new
+function NexusWrappedInstance.__new(...)
+    if not DeprecationNoticePrinted and not string.find(debug.traceback("", 2), "VRPointing") then
+        DeprecationNoticePrinted = true
+        warn(DEPRECATION_WARNING)
+    end
+    return OriginalWrappedInstanceNew(...)
 end
 
 
