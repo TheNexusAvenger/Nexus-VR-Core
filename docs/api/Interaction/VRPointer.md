@@ -1,6 +1,9 @@
 # VRPointer
 (Extends `NexusInstance`)
 
+!!! Warning
+    `VRPointer` is deprecated and will be removed.
+
 Visual for pointing at an object. Used
 with [`VRPointing`](VRPointing.md) to
 create pointers when updating where the

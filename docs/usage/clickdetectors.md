@@ -1,4 +1,9 @@
 # ClickDetectors
+
+!!! Warning
+    `NexusWrappedInstance` will be removed in a future version.
+    `ClickDetectors` should no longer be passed into Nexus VR Core.
+
 `ClickDetector`s are also supported in Nexus VR Core,
 and are on-par with the `SurfaceGui`'s usage from a 
 developer standpoint. Unlike `ScreenGui` and `SurfaceGui`,

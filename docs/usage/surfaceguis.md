@@ -1,4 +1,8 @@
 # SurfaceGuis
+!!! Warning
+    `VRSurfaceGui` and `NexusWrappedInstance` are deprecated and will
+    be removed in a future version.
+
 Like `ScreenGui`s, Nexus VR Core tries to improve
 `SurfaceGui`s. Unlike `ScreenGui`s, less functionality
 is added beyond pointing and the `PointingEnabled`

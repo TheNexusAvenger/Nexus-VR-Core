@@ -24,13 +24,15 @@ for the main module.
 ```lua
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
 
-local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance") --Equivalent to require(game.ReplicatedStorage.NexusVRCore.NexusWrappedInstance)
 local ScreenGui = NexusVRCore:GetResource("Container.ScreenGui") --Equivalent to require(game.ReplicatedStorage.NexusVRCore.Container.ScreenGui)
-local VRPointing = NexusVRCore:GetResource("Interaction.VRPointing") --Equivalent to require(game.ReplicatedStorage.NexusVRCore.Interaction.VRPointing)
+local ScreenGui = NexusVRCore:GetResource("Utility.PartUtility") --Equivalent to require(game.ReplicatedStorage.NexusVRCore.Utility.PartUtility)
 ...
 ```
 
 ## Pointing Setup
+!!! Warning
+    Pointing is deprecated in Nexus VR Core and will be removed in a future version.
+
 For pointing to be set up, the controller events
 need to be connected and the updating of where the
 controllers are pointing needs to be started. This

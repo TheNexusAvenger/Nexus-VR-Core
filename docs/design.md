@@ -1,4 +1,8 @@
 # Design
+!!! Warning
+    `NexusWrappedInstance` will be removed in a future version. The
+    design covered is deprecated as well.
+
 The core design of Nexus VR Core is based
 on the features of [Nexus Wrapped Instance](https://github.com/TheNexusAvenger/Nexus-Wrapped-Instance),
 such as being able to manually invoke

@@ -1,6 +1,11 @@
 # ScreenGui
 (Extends `NexusWrappedInstance<Instance>`)
 
+!!! Warning
+    `NexusWrappedInstance` functionality will be removed in a
+    future update. `GetContainer` should be used for parenting
+    instances.
+
 The `ScreenGui` class is a container class for
 user interfaces that are not attached to a
 part. The implementation depends on if the
@@ -73,3 +78,6 @@ be able to accept pointing.
 !!! Note
     This property only affects VR users. This property
     can be applied to non-VR users but will have no affect.
+
+## `Instance ScreenGui:GetContainer()`
+Returns the container to parent instances to.

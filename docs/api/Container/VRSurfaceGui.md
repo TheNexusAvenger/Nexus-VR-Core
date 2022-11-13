@@ -1,6 +1,9 @@
 # VRSurfaceGui
 (Extends `NexusWrappedInstance<SurfaceGui>`)
 
+!!! Warning
+    `VRSurfaceGui` is deprecated and will be removed.
+
 The `VRSurfaceGui` class is a container class for
 user interfaces that are attached to a part.
 

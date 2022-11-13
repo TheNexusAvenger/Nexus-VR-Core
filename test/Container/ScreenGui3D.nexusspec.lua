@@ -32,6 +32,14 @@ function ScreenGui3DTest:Teardown()
 end
 
 --[[
+Tests the GetContainer method.
+--]]
+NexusUnitTesting:RegisterUnitTest(ScreenGui3DTest.new("GetContainer"):SetRun(function(self)
+    self:AssertTrue(self.CuT:GetContainer():IsA("SurfaceGui"))
+    self:AssertFalse(self.CuT:GetContainer():IsA("NexusInstance"))
+end))
+
+--[[
 Tests the UpdateSize method.
 --]]
 NexusUnitTesting:RegisterUnitTest(ScreenGui3DTest.new("UpdateSize"):SetRun(function(self)

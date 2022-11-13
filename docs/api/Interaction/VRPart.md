@@ -1,6 +1,9 @@
 # VRPart
 (Extends `NexusWrappedInstance<Part>`)
 
+!!! Warning
+    `VRPart` is deprecated and will be removed.
+
 `VRPart` extends the part with additional
 functions for math with VR controllers.
 They are used internally for VR pointing,

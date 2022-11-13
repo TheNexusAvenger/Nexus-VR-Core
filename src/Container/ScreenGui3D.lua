@@ -127,6 +127,13 @@ function ScreenGui3D:UpdateCFrame(DeltaTime)
 end
 
 --[[
+Returns the container to parent instances to.
+--]]
+function ScreenGui3D:GetContainer()
+	return self.WrappedInstance
+end
+
+--[[
 Destroys the ScreenGui.
 --]]
 function ScreenGui3D:Destroy()

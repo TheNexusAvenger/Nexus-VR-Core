@@ -38,18 +38,17 @@ which will work with VR and non-VR.
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
 
 local ScreenGui = NexusVRCore:GetResource("Container.ScreenGui")
-local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 
 local TestScreenGui = ScreenGui.new()
 TestScreenGui.Name = "TestGui"
 TestScreenGui.Easing = 0.2 --The UI will slowly follow VR users. No affect on non-VR players.
 TestScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
-local TestButton = NexusWrappedInstance.new("TextButton")
+local TestButton = Instance.new("TextButton")
 TestButton.Name = "TestButton"
 TestButton.Size = UDim2.new(0,200,0,50)
 TestButton.Position = UDim2.new(0,50,0,50)
-TestButton.Parent = TestScreenGui
+TestButton.Parent = TestScreenGui:GetContainer()
 
 TestButton.MouseButton1Down:Connect(function()
     print("Button pressed!")
@@ -65,7 +64,6 @@ behind it from being interactable.
 local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
 
 local ScreenGui = NexusVRCore:GetResource("Container.ScreenGui")
-local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 
 local TestScreenGui = ScreenGui.new()
 TestScreenGui.Name = "TestGui"
@@ -75,11 +73,11 @@ TestScreenGui.RotationOffset = CFrame.Angles(math.rad(-15),math.rad(15),0) --Mov
 TestScreenGui.CanvasSize = Vector2.new(0,200,0,50) --Makes the UI only have the needed area for the button. No affect on non-VR players.
 TestScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
-local TestButton = NexusWrappedInstance.new("TextButton")
+local TestButton = Instance.new("TextButton")
 TestButton.Name = "TestButton"
 TestButton.Size = UDim2.new(0,200,0,50)
 TestButton.Position = UDim2.new(0,50,0,50)
-TestButton.Parent = TestScreenGui
+TestButton.Parent = TestScreenGui:GetContainer()
 
 --Revert the position to the origin if the user is in VR.
 if game:GetService("UserInputService").VREnabled then
@@ -93,23 +91,6 @@ end)
 ```
 
 ## Existing ScreenGuis
-In some cases, using existing `ScreenGui`s may be needed.
-The main difference to note is using `GetInstance` instead
-of `new` so that 2 calls to `GetInstance` results in the same
-instance being returned, similar to how `FindFirstChild` returns
-the same value when returned twice.
-
-```lua
-local NexusVRCore = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore"))
-
-local ScreenGui = NexusVRCore:GetResource("Container.ScreenGui")
-local TestScreenGui = ScreenGui.GetInstance(game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("TestGui"))
-TestScreenGui.Easing = 0.2 --The UI will slowly follow VR users. No affect on non-VR players.
-local TestButton = TestScreenGui:WaitForChild("TestButton")
-
---Since TestScreenGui is wrapped, TestButton is also wrapped when indexed.
---TestScreenGui.TestButton and TestScreenGui:FindFirstChild("TestButton") also work.
-TestButton.MouseButton1Down:Connect(function()
-  print("Button pressed!")
-end)
-```
+!!! Warning
+    The previous suggested changes for existing `ScreenGui`s
+    has been removed due to the deprecation of `VRPointing`.

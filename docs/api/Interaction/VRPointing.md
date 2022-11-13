@@ -1,6 +1,9 @@
 # VRPointing
 (Extends `NexusInstance`)
 
+!!! Warning
+    `VRPointing` is deprecated and will be removed.
+
 Manages pointing at [`VRSurfaceGui`](../Container/VRSurfaceGui.md)s,
 [`ScreenGui`](../Container/ScreenGui.md)s, and `ClickDetector`s.
 

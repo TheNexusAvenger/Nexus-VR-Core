@@ -34,6 +34,13 @@ function ScreenGui2D:__new(ExistingScreenGui)
     self.PointingEnabled = true
 end
 
+--[[
+Returns the container to parent instances to.
+--]]
+function ScreenGui2D:GetContainer()
+	return self.WrappedInstance
+end
+
 
 
 return ScreenGui2D
