@@ -15,7 +15,7 @@ return function()
     local TestScreenGui3D = nil
     beforeEach(function()
         TestScreenGui3D = ScreenGui3D.new()
-        TestScreenGui3D.EventsToDisconnect[#TestScreenGui3D.EventsToDisconnect]:Disconnect()
+        TestScreenGui3D.UpdateEvent:Disconnect()
     end)
     afterEach(function()
         TestScreenGui3D:Destroy()

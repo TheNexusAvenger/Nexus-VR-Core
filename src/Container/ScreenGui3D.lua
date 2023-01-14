@@ -3,24 +3,28 @@ TheNexusAvenger
 
 Contains user interface components for a 3D user interface.
 --]]
+--!strict
 
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
-local NexusVRCore = require(script.Parent.Parent)
-local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
+local BaseScreenGui = require(script.Parent:WaitForChild("BaseScreenGui"))
 
-local ScreenGui3D = NexusWrappedInstance:Extend()
+local ScreenGui3D = BaseScreenGui:Extend()
 ScreenGui3D:SetClassName("ScreenGui3D")
-ScreenGui3D:CreateGetInstance()
+
+export type ScreenGui3D = {
+    new: () -> ScreenGui3D,
+    Extend: (self: ScreenGui3D) -> ScreenGui3D,
+} & BaseScreenGui.BaseScreenGui
 
 
 
 --[[
-Creates the Screen Gui 3D.
+Creates a 3D ScreenGui.
 --]]
-function ScreenGui3D:__new(ExistingScreenGui)
-    self:InitializeSuper(Instance.new("SurfaceGui"))
+function ScreenGui3D:__new()
+    BaseScreenGui.__new(self, Instance.new("SurfaceGui"))
 
     --Create the Adornee.
     local NexusVRCoreContainer = Workspace.CurrentCamera:FindFirstChild("NexusVRCoreContainer")
@@ -39,26 +43,10 @@ function ScreenGui3D:__new(ExistingScreenGui)
 
     --Set the properties.
     self.AlwaysOnTop = true
-    if ExistingScreenGui then
-        self.Name = ExistingScreenGui.Name
-        self.Enabled = ExistingScreenGui.Enabled
-    end
 
     --Disable replication of ScreenGui properties.
     self:DisableChangeReplication("DisplayOrder")
     self:DisableChangeReplication("IgnoreGuiInset")
-
-    --Disable replication and set the defaults.
-    self:DisableChangeReplication("RotationOffset")
-    self.RotationOffset = CFrame.new()
-    self:DisableChangeReplication("Depth")
-    self.Depth = 5
-    self:DisableChangeReplication("FieldOfView")
-    self.FieldOfView = math.rad(50)
-    self:DisableChangeReplication("CanvasSize")
-    self.CanvasSize = Vector2.new(1000,1000)
-    self:DisableChangeReplication("Easing")
-    self.Easing = 0
     self:DisableChangeReplication("LastRotation")
     self.LastRotation = CFrame.new(Workspace.CurrentCamera:GetRenderCFrame().Position):Inverse() * Workspace.CurrentCamera:GetRenderCFrame()
 
@@ -75,41 +63,31 @@ function ScreenGui3D:__new(ExistingScreenGui)
 
     --Update the size and position.
     self:UpdateSize()
-    table.insert(self.EventsToDisconnect,RunService.RenderStepped:Connect(function(DeltaTime)
+    self:DisableChangeReplication("UpdateEvent")
+    self.UpdateEvent = RunService.RenderStepped:Connect(function(DeltaTime: number)
         if self.Enabled then
             self:UpdateCFrame(DeltaTime)
         end
-    end))
-
-    --Set the parent, move the instances over, and destroy the existing ScreenGui.
-    if ExistingScreenGui then
-        self.Parent = ExistingScreenGui.Parent
-        for _,Ins in pairs(ExistingScreenGui:GetChildren()) do
-            Ins.Parent = self:GetWrappedInstance()
-        end
-        spawn(function()
-            ExistingScreenGui:Destroy()
-        end)
-    end
+    end)
 end
 
 --[[
 Updates the size of the part.
 --]]
-function ScreenGui3D:UpdateSize()
+function ScreenGui3D:UpdateSize(): ()
     local Width = 2 * math.tan(self.FieldOfView/2) * self.Depth
     if self.CanvasSize.Y <= self.CanvasSize.X then
         self.Adornee.Size = Vector3.new(Width,Width * (self.CanvasSize.Y/self.CanvasSize.X),0)
     else
         self.Adornee.Size = Vector3.new(Width * (self.CanvasSize.X/self.CanvasSize.Y),Width,0)
     end
-    self:GetWrappedInstance().CanvasSize = self.CanvasSize
+    self.CanvasSize = self.CanvasSize
 end
 
 --[[
 Updates the CFrame of the part.
 --]]
-function ScreenGui3D:UpdateCFrame(DeltaTime)
+function ScreenGui3D:UpdateCFrame(DeltaTime: number): ()
     DeltaTime = DeltaTime or self.Easing
 
     --Update the rotation.
@@ -118,7 +96,7 @@ function ScreenGui3D:UpdateCFrame(DeltaTime)
     if self.Easing == 0 then
         self.LastRotation = TargetCFrame
     else
-        self.LastRotation = self.LastRotation:Lerp(TargetCFrame,DeltaTime/self.Easing)
+        self.LastRotation = self.LastRotation:Lerp(TargetCFrame, DeltaTime / self.Easing)
     end
 
     --Set the CFrame.
@@ -126,17 +104,11 @@ function ScreenGui3D:UpdateCFrame(DeltaTime)
 end
 
 --[[
-Returns the container to parent instances to.
---]]
-function ScreenGui3D:GetContainer()
-	return self.WrappedInstance
-end
-
---[[
 Destroys the ScreenGui.
 --]]
-function ScreenGui3D:Destroy()
-    self.super:Destroy()
+function ScreenGui3D:Destroy(): ()
+    BaseScreenGui.Destroy(self)
+    self.UpdateEvent:Disconnect()
     self.Adornee:Destroy()
 end
 

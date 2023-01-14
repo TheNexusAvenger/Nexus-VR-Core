@@ -1,44 +1,27 @@
 --[[
 TheNexusAvenger
 
-Contains user interface components for a 2D user interface.
+Implementation of a ScreenGui for 2D players.
 --]]
+--!strict
 
-local NexusVRCore = require(script.Parent.Parent)
-local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
+local BaseScreenGui = require(script.Parent:WaitForChild("BaseScreenGui"))
 
-local ScreenGui2D = NexusWrappedInstance:Extend()
+local ScreenGui2D = BaseScreenGui:Extend()
 ScreenGui2D:SetClassName("ScreenGui2D")
-ScreenGui2D:CreateGetInstance()
+
+export type ScreenGui2D = {
+    new: () -> ScreenGui2D,
+    Extend: (self: ScreenGui2D) -> ScreenGui2D,
+} & BaseScreenGui.BaseScreenGui
 
 
 
 --[[
-Creates the Screen Gui 2D.
+Creates a 2D ScreenGui.
 --]]
-function ScreenGui2D:__new(ExistingScreenGui)
-    self:InitializeSuper(ExistingScreenGui or Instance.new("ScreenGui"))
-
-    --Disable replication for 3D-specific properties.
-    self:DisableChangeReplication("RotationOffset")
-    self.RotationOffset = CFrame.new()
-    self:DisableChangeReplication("Depth")
-    self.Depth = 5
-    self:DisableChangeReplication("FieldOfView")
-    self.FieldOfView = math.rad(50)
-    self:DisableChangeReplication("CanvasSize")
-    self.CanvasSize = Vector2.new(1000,1000)
-    self:DisableChangeReplication("Easing")
-    self.Easing = 0
-    self:DisableChangeReplication("PointingEnabled")
-    self.PointingEnabled = true
-end
-
---[[
-Returns the container to parent instances to.
---]]
-function ScreenGui2D:GetContainer()
-	return self.WrappedInstance
+function ScreenGui2D:__new(): ()
+    BaseScreenGui.__new(self, Instance.new("ScreenGui"))
 end
 
 
