@@ -8,10 +8,9 @@ local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
 local NexusVRCore = require(script.Parent.Parent)
-local VRSurfaceGui = NexusVRCore:GetResource("Container.VRSurfaceGui")
-local VRPart = NexusVRCore:GetResource("Interaction.VRPart")
+local NexusWrappedInstance = NexusVRCore:GetResource("NexusWrappedInstance")
 
-local ScreenGui3D = VRSurfaceGui:Extend()
+local ScreenGui3D = NexusWrappedInstance:Extend()
 ScreenGui3D:SetClassName("ScreenGui3D")
 ScreenGui3D:CreateGetInstance()
 
@@ -30,7 +29,7 @@ function ScreenGui3D:__new(ExistingScreenGui)
         NexusVRCoreContainer.Name = "NexusVRCoreContainer"
         NexusVRCoreContainer.Parent = Workspace.CurrentCamera
     end
-    local Adornee = VRPart.new()
+    local Adornee = Instance.new("Part")
     Adornee.Transparency = 1
     Adornee.Anchored = true
     Adornee.CanCollide = false
@@ -61,7 +60,7 @@ function ScreenGui3D:__new(ExistingScreenGui)
     self:DisableChangeReplication("Easing")
     self.Easing = 0
     self:DisableChangeReplication("LastRotation")
-    self.LastRotation = CFrame.new(Workspace.CurrentCamera:GetRenderCFrame().Position):inverse() * Workspace.CurrentCamera:GetRenderCFrame()
+    self.LastRotation = CFrame.new(Workspace.CurrentCamera:GetRenderCFrame().Position):Inverse() * Workspace.CurrentCamera:GetRenderCFrame()
 
     --Connect updating the size.
     self:AddPropertyFinalizer("Depth",function()
@@ -115,7 +114,7 @@ function ScreenGui3D:UpdateCFrame(DeltaTime)
 
     --Update the rotation.
     local CameraCFrame = Workspace.CurrentCamera:GetRenderCFrame()
-    local TargetCFrame = CFrame.new(CameraCFrame.Position):inverse() * CameraCFrame
+    local TargetCFrame = CFrame.new(CameraCFrame.Position):Inverse() * CameraCFrame
     if self.Easing == 0 then
         self.LastRotation = TargetCFrame
     else
