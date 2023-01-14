@@ -57,11 +57,11 @@ function BaseScreenGui:__new(Container: LayerCollector): ()
     self.RotationOffset = CFrame.new()
     self:DisableChangeReplication("Depth")
     self.Depth = 5
+    self:DisableChangeReplication("FieldOfView")
+    self.FieldOfView = math.rad(50)
     if not Container:IsA("SurfaceGui") then
         self:DisableChangeReplication("CanvasSize")
     end
-    self.FieldOfView = math.rad(50)
-    self:DisableChangeReplication("CanvasSize")
     self.CanvasSize = Vector2.new(1000, 1000)
     self:DisableChangeReplication("Easing")
     self.Easing = 0
