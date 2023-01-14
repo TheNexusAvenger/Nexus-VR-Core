@@ -2,12 +2,6 @@
     "name": "NexusVRCore",
     "tree": {
         "$path": "./src",
-        "NexusProject": {
-            "$path": "./module/Nexus-Project/"
-        },
-        "NexusWrappedInstance": {
-            "$path": "./module/Nexus-Wrapped-Instance/"
-        },
         "NexusInstance": {
             "$path": "./module/Nexus-Instance/"
         }
