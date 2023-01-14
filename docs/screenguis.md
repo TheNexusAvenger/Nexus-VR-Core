@@ -89,8 +89,3 @@ TestButton.MouseButton1Down:Connect(function()
 end)
 
 ```
-
-## Existing ScreenGuis
-!!! Warning
-    The previous suggested changes for existing `ScreenGui`s
-    has been removed due to the deprecation of `VRPointing`.
