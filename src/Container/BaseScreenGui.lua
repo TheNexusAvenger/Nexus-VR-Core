@@ -19,6 +19,7 @@ export type BaseScreenGui = {
     FieldOfView: number,
     CanvasSize: Vector2,
     Easing: number,
+    PointingEnabled: boolean,
     GetContainer: (self: BaseScreenGui) -> (LayerCollector),
     DisableChangeReplication: (self: BaseScreenGui, Name: string) -> (),
     Destroy: (self: BaseScreenGui) -> (),
@@ -46,10 +47,10 @@ function BaseScreenGui:__new(Container: LayerCollector): ()
         return (Container :: any)[Index]
     end
     Metatable.__newindex = function(self, Index: string, Value): ()
+        BaseNewIndex(self, Index, Value)
         if not NonReplicatedProperties[Index] then
             (Container :: any)[Index] = Value
         end
-        BaseNewIndex(self, Index, Value)
     end
 
     --Set the properties.
@@ -65,6 +66,8 @@ function BaseScreenGui:__new(Container: LayerCollector): ()
     self.CanvasSize = Vector2.new(1000, 1000)
     self:DisableChangeReplication("Easing")
     self.Easing = 0
+    self:DisableChangeReplication("PointingEnabled")
+    self.PointingEnabled = true
 end
 
 --[[

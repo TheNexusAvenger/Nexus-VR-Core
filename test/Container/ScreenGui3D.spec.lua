@@ -78,5 +78,21 @@ return function()
                 expect(TestScreenGui3D.LastRotation).to.be.near(ExpectedCFrame, 0.05)
             end
         end)
+
+        it("should change CanQuery.", function()
+            TestScreenGui3D.PointingEnabled = false
+            task.wait()
+            expect(TestScreenGui3D.Adornee.CanQuery).to.equal(false)
+            TestScreenGui3D.PointingEnabled = true
+            task.wait()
+            expect(TestScreenGui3D.Adornee.CanQuery).to.equal(true)
+            TestScreenGui3D.PointingEnabled = true
+            TestScreenGui3D.Enabled = false
+            task.wait()
+            expect(TestScreenGui3D.Adornee.CanQuery).to.equal(false)
+            TestScreenGui3D.Enabled = true
+            task.wait()
+            expect(TestScreenGui3D.Adornee.CanQuery).to.equal(true)
+        end)
     end)
 end

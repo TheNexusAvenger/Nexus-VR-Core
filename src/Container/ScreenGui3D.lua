@@ -43,6 +43,12 @@ function ScreenGui3D:__new()
 
     --Set the properties.
     self.AlwaysOnTop = true
+    self:AddPropertyFinalizer("PointingEnabled", function()
+        self.Adornee.CanQuery = self.Enabled and self.PointingEnabled
+    end)
+    self:AddPropertyFinalizer("Enabled", function()
+        self.Adornee.CanQuery = self.Enabled and self.PointingEnabled
+    end)
 
     --Disable replication of ScreenGui properties.
     self:DisableChangeReplication("DisplayOrder")
@@ -51,13 +57,13 @@ function ScreenGui3D:__new()
     self.LastRotation = CFrame.new(Workspace.CurrentCamera:GetRenderCFrame().Position):Inverse() * Workspace.CurrentCamera:GetRenderCFrame()
 
     --Connect updating the size.
-    self:AddPropertyFinalizer("Depth",function()
+    self:AddPropertyFinalizer("Depth", function()
         self:UpdateSize()
     end)
-    self:AddPropertyFinalizer("FieldOfView",function()
+    self:AddPropertyFinalizer("FieldOfView", function()
         self:UpdateSize()
     end)
-    self:AddPropertyFinalizer("CanvasSize",function()
+    self:AddPropertyFinalizer("CanvasSize", function(Value)
         self:UpdateSize()
     end)
 
@@ -77,9 +83,9 @@ Updates the size of the part.
 function ScreenGui3D:UpdateSize(): ()
     local Width = 2 * math.tan(self.FieldOfView/2) * self.Depth
     if self.CanvasSize.Y <= self.CanvasSize.X then
-        self.Adornee.Size = Vector3.new(Width,Width * (self.CanvasSize.Y/self.CanvasSize.X),0)
+        self.Adornee.Size = Vector3.new(Width, Width * (self.CanvasSize.Y / self.CanvasSize.X), 0)
     else
-        self.Adornee.Size = Vector3.new(Width * (self.CanvasSize.X/self.CanvasSize.Y),Width,0)
+        self.Adornee.Size = Vector3.new(Width * (self.CanvasSize.X / self.CanvasSize.Y), Width, 0)
     end
     self.CanvasSize = self.CanvasSize
 end
