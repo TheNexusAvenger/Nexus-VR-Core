@@ -102,11 +102,11 @@ function ScreenGui3D:UpdateCFrame(DeltaTime: number): ()
     if self.Easing == 0 then
         self.LastRotation = TargetCFrame
     else
-        self.LastRotation = self.LastRotation:Lerp(TargetCFrame, DeltaTime / self.Easing)
+        self.LastRotation = self.LastRotation:Lerp(TargetCFrame, math.clamp(DeltaTime / self.Easing, 0, 1))
     end
 
     --Set the CFrame.
-    self.Adornee.CFrame = CFrame.new(CameraCFrame.Position) * self.LastRotation * self.RotationOffset * CFrame.new(0,0,-self.Depth)
+    self.Adornee.CFrame = CFrame.new(CameraCFrame.Position) * self.LastRotation * self.RotationOffset * CFrame.new(0, 0, -self.Depth)
 end
 
 --[[
