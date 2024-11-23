@@ -6,7 +6,10 @@
             "$className": "ReplicatedStorage",
             "NexusVRCore": {
                 "$path": "."
-            },
+            }
+        },
+        "TestService": {
+            "$className": "TestService",
             "NexusVRCoreTest": {
                 "$path": "./test"
             }

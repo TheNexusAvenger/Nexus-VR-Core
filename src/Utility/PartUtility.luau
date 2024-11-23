@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Utility for parts.
---]]
+--Utility for parts.
 
 local PartUtility = {}
 

@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Tests for ScreenGui3D.
---]]
+--Tests for ScreenGui3D.
 --!strict
 --$NexusUnitTestExtensions
 

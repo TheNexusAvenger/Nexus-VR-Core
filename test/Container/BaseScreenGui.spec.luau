@@ -1,12 +1,9 @@
---[[
-TheNexusAvenger
-
-Tests for BaseScreenGui.
---]]
+--Tests for BaseScreenGui.
 --!strict
 
-local NexusVRCore = game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore")
-local BaseScreenGui = require(NexusVRCore:WaitForChild("Container"):WaitForChild("BaseScreenGui"))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local BaseScreenGui = require(ReplicatedStorage.NexusVRCore.Container.BaseScreenGui)
 
 return function()
     local Container, TestBaseScreenGui = nil, nil
@@ -14,6 +11,7 @@ return function()
         Container = Instance.new("ScreenGui")
         TestBaseScreenGui = BaseScreenGui.new(Container)
     end)
+    
     afterEach(function()
         TestBaseScreenGui:Destroy()
     end)

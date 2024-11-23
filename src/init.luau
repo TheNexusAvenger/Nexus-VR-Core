@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Project for fetching resources of Nexus VR Core.
---]]
+--Project for fetching resources of Nexus VR Core.
 
 local NexusProject = {}
 

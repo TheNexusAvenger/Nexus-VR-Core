@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Tests for PartUtility.
---]]
+--Tests for PartUtility.
 --!strict
 --$NexusUnitTestExtensions
 
