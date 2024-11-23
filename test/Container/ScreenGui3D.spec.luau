@@ -1,6 +1,5 @@
 --Tests for ScreenGui3D.
 --!strict
---$NexusUnitTestExtensions
 
 local Workspace = game:GetService("Workspace")
 
@@ -16,6 +15,21 @@ return function()
     afterEach(function()
         TestScreenGui3D:Destroy()
     end)
+
+    local function expectNear<T>(Actual: T, Expected: T): ()
+        local ActualValues, ExpectedValues = {}, {}
+        if typeof(Actual) == "Vector3" and typeof(Expected) == "Vector3" then
+            ActualValues = {Actual.X, Actual.Y, Actual.Z}
+            ExpectedValues = {Expected.X, Expected.Y, Expected.Z}
+        elseif typeof(Actual) == "CFrame" and typeof(Expected) == "CFrame" then
+            ActualValues = {Actual:components()}
+            ExpectedValues = {Expected:components()}
+        end
+
+        for i, ActualValue in ActualValues do
+            expect(math.abs(ActualValue - ExpectedValues[i]) < 0.05).to.equal(true)
+        end
+    end
 
     describe("A ScreenGui3D", function()
         it("should return the container.", function()
@@ -34,22 +48,22 @@ return function()
             TestScreenGui3D.CanvasSize = Vector2.new(500, 500)
             TestScreenGui3D.Depth = 3 * math.sqrt(3)
             task.wait()
-            expect(TestScreenGui3D.Adornee.Size).to.be.near(Vector3.new(6, 6, MinPartSize), 0.05)
+            expectNear(TestScreenGui3D.Adornee.Size, Vector3.new(6, 6, MinPartSize))
             TestScreenGui3D.Depth = 3
             task.wait()
-            expect(TestScreenGui3D.Adornee.Size).to.be.near(Vector3.new(6 / math.sqrt(3), 6 / math.sqrt(3), MinPartSize), 0.05)
+            expectNear(TestScreenGui3D.Adornee.Size, Vector3.new(6 / math.sqrt(3), 6 / math.sqrt(3), MinPartSize))
             TestScreenGui3D.Depth = 3 * math.sqrt(3)
             task.wait()
-            expect(TestScreenGui3D.Adornee.Size).to.be.near(Vector3.new(6, 6, MinPartSize), 0.05)
+            expectNear(TestScreenGui3D.Adornee.Size, Vector3.new(6, 6, MinPartSize))
             TestScreenGui3D.Depth = 6 * math.sqrt(3)
             task.wait()
-            expect(TestScreenGui3D.Adornee.Size).to.be.near(Vector3.new(12, 12, MinPartSize), 0.05)
+            expectNear(TestScreenGui3D.Adornee.Size, Vector3.new(12, 12, MinPartSize))
             TestScreenGui3D.CanvasSize = Vector2.new(500, 250)
             task.wait()
-            expect(TestScreenGui3D.Adornee.Size).to.be.near(Vector3.new(12, 6, MinPartSize), 0.05)
+            expectNear(TestScreenGui3D.Adornee.Size, Vector3.new(12, 6, MinPartSize))
             TestScreenGui3D.CanvasSize = Vector2.new(250, 500)
             task.wait()
-            expect(TestScreenGui3D.Adornee.Size).to.be.near(Vector3.new(6, 12, MinPartSize), 0.05)
+            expectNear(TestScreenGui3D.Adornee.Size, Vector3.new(6, 12, MinPartSize))
         end)
 
         it("should update the CFrame.", function()
@@ -62,7 +76,7 @@ return function()
             TestScreenGui3D.Easing = 0
             TestScreenGui3D.LastRotation = StartCFrame
             TestScreenGui3D:UpdateCFrame(0.1)
-            expect(TestScreenGui3D.LastRotation).to.be.near(CameraRotation, 0.05)
+            expectNear(TestScreenGui3D.LastRotation, CameraRotation)
 
             --Assert the frame is eased.
             TestScreenGui3D.Easing = 1
@@ -71,7 +85,7 @@ return function()
                 local ExpectedCFrame = StartCFrame:Lerp(CameraRotation, 0.1)
                 StartCFrame = ExpectedCFrame
                 TestScreenGui3D:UpdateCFrame(0.1)
-                expect(TestScreenGui3D.LastRotation).to.be.near(ExpectedCFrame, 0.05)
+                expectNear(TestScreenGui3D.LastRotation, ExpectedCFrame)
             end
         end)
 
