@@ -15,8 +15,11 @@ NexusVRCore.ScreenGui3D = ScreenGui3D
 NexusVRCore.PartUtility = PartUtility
 
 export type BaseScreenGui<T> = BaseScreenGui.BaseScreenGui<T>
+export type NexusInstanceBaseScreenGui<T> = BaseScreenGui.NexusInstanceBaseScreenGui<T>
 export type ScreenGui2D = ScreenGui2D.ScreenGui2D
+export type NexusInstanceScreenGui2D = ScreenGui2D.NexusInstanceScreenGui2D
 export type ScreenGui3D = ScreenGui3D.ScreenGui3D
+export type NexusInstanceScreenGui3D = ScreenGui3D.NexusInstanceScreenGui3D
 
 
 
