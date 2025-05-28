@@ -1,0 +1,16 @@
+[package]
+name = "thenexusavenger/nexus-vr-core"
+repository = "https://github.com/TheNexusAvenger/Nexus-VR-Core"
+description = "Utilities for developing VR games and systems on Roblox."
+license = "MIT"
+authors = ["TheNexusAvenger"]
+version = "2.2.0"
+
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+exclude = ["**"]
+include = ["src", "src/*", "Packages", "Packages/*", "default.project.json", "wally.lock", "wally.toml"]
+
+[dependencies]
+NexusInstance = "thenexusavenger/nexus-instance@4.1.2"

@@ -4,7 +4,7 @@
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
-local NexusInstance = require(script.Parent.Parent:WaitForChild("NexusInstance"))
+local NexusInstance = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("NexusInstance"))
 local BaseScreenGui = require(script.Parent:WaitForChild("BaseScreenGui"))
 
 local ScreenGui3D = {}

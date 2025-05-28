@@ -1,7 +1,7 @@
 --Implementation of a ScreenGui for 2D players.
 --!strict
 
-local NexusInstance = require(script.Parent.Parent:WaitForChild("NexusInstance"))
+local NexusInstance = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("NexusInstance"))
 local BaseScreenGui = require(script.Parent:WaitForChild("BaseScreenGui"))
 
 local ScreenGui2D = {}
