@@ -15,7 +15,7 @@ setmetatable(ScreenGui3D, BaseScreenGui)
 export type ScreenGui3D = {
     Adornee: BasePart,
     LastRotation: CFrame,
-    UpdateEvent: RBXScriptConnection,
+    UpdateEvent: RBXScriptConnection?,
 } & typeof(setmetatable({}, ScreenGui3D)) & BaseScreenGui.BaseScreenGui<SurfaceGui>
 export type NexusInstanceScreenGui3D = NexusInstance.NexusInstance<ScreenGui3D>
 
@@ -71,11 +71,13 @@ function ScreenGui3D.__new(self: NexusInstanceScreenGui3D): ()
     --Update the size and position.
     self:UpdateSize()
     self:DisableChangeReplication("UpdateEvent")
-    self.UpdateEvent = RunService.RenderStepped:Connect(function(DeltaTime: number)
-        if self.Enabled then
-            self:UpdateCFrame(DeltaTime)
-        end
-    end)
+    if RunService:IsClient() then --Required for Open Cloud testing.
+        self.UpdateEvent = RunService.RenderStepped:Connect(function(DeltaTime: number)
+            if self.Enabled then
+                self:UpdateCFrame(DeltaTime)
+            end
+        end)
+    end
 end
 
 --[[
@@ -116,7 +118,10 @@ Destroys the ScreenGui.
 --]]
 function ScreenGui3D.Destroy(self: NexusInstanceScreenGui3D): ()
     BaseScreenGui.Destroy(self)
-    self.UpdateEvent:Disconnect()
+    if self.UpdateEvent then
+        self.UpdateEvent:Disconnect()
+        self.UpdateEvent = nil
+    end
     self.Adornee:Destroy()
 end
 
