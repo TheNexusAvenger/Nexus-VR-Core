@@ -7,7 +7,7 @@
             "Packages": {
                 "$className": "Folder",
                 "NexusVRCore": {
-                    "$path": "./standalone.project.json"
+                    "$path": "./default-standalone.project.json"
                 }
             }
         },
