@@ -1,8 +1,9 @@
 --Tests for PartUtility.
 --!strict
 
-local NexusVRCore = game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore")
-local PartUtility = require(NexusVRCore:WaitForChild("Utility"):WaitForChild("PartUtility"))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local PartUtility = require(ReplicatedStorage.Packages.NexusVRCore.Utility.PartUtility)
 
 return function()
     local TestPart = nil

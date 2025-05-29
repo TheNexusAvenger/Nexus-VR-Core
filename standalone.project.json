@@ -3,7 +3,7 @@
     "tree": {
         "$path": "./src",
         "Packages": {
-            "$path": "./dist"
+            "$path": "./Packages"
         }
     }
 }

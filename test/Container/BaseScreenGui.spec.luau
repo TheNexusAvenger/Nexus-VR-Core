@@ -3,7 +3,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local BaseScreenGui = require(ReplicatedStorage.NexusVRCore.Container.BaseScreenGui)
+local BaseScreenGui = require(ReplicatedStorage.Packages.NexusVRCore.Container.BaseScreenGui)
 
 return function()
     local Container, TestBaseScreenGui = nil, nil

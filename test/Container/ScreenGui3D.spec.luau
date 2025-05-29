@@ -2,9 +2,9 @@
 --!strict
 
 local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local NexusVRCore = game:GetService("ReplicatedStorage"):WaitForChild("NexusVRCore")
-local ScreenGui3D = require(NexusVRCore:WaitForChild("Container"):WaitForChild("ScreenGui3D"))
+local ScreenGui3D = require(ReplicatedStorage.Packages.NexusVRCore.Container.ScreenGui3D) 
 
 return function()
     local TestScreenGui3D = nil

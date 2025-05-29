@@ -5,9 +5,9 @@
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
             "Packages": {
-                "$path": "./Packages",
+                "$className": "Folder",
                 "NexusVRCore": {
-                    "$path": "."
+                    "$path": "./standalone.project.json"
                 }
             }
         },
